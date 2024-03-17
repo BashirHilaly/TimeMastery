@@ -14,26 +14,14 @@ export default function App() {
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start">
-          <LinearGradient
-          // Background Linear Gradient
-          colors={['rgba(0,0,0,0.8)', 'transparent']}
-          style={{ flex: 1 }}
-          >
-            <View className="bg-slate-500 h-64 w-11/12 p-5 rounded-3xl">
+            <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#335650', '#3E7969']} style={{ flex: 1 }}>
               <Text className="text-[#BEBEBE] font-bold text-xl text-center">ADD TASK</Text>
-            </View>
-          </LinearGradient>
+            </LinearGradient>
         </View>
         <View className="basis-1/2 items-end">
-          <LinearGradient
-            // Background Linear Gradient
-            colors={['rgba(0,0,0,0.8)', 'transparent']}
-            style={{ flex: 1 }}
-          >
-            <View className="bg-slate-500 h-64 w-11/12 p-5 rounded-3xl">
+            <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#3C3258', '#5A478E']} style={{ flex: 1 }}>
               <Text className="text-[#BEBEBE] font-bold text-xl text-center">CLOCK</Text>
-            </View>
-          </LinearGradient>
+            </LinearGradient>
         </View>
       </View>
     </View>

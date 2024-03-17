@@ -10,7 +10,7 @@ const Summary = () => {
                 <Text className="text-[#BEBEBE]">Circle</Text>
             </View>
             <View className="basis-1/2">
-                <View className="flex flex-row mb-4">
+                <View className="flex flex-row mb-2">
                     <View className="basis-1/2 justify-center items-center">
                         <FontAwesome name="circle" size={18} color="#CFAADF" />
                     </View>
@@ -18,7 +18,7 @@ const Summary = () => {
                         <Text className="text-[#BEBEBE] font-semibold text-xl">Task 1</Text>
                     </View>
                 </View>
-                <View className="flex flex-row mb-4">
+                <View className="flex flex-row mb-2">
                     <View className="basis-1/2 justify-center items-center">
                         <FontAwesome name="circle" size={18} color="#FEDA98" />
                     </View>
@@ -26,7 +26,7 @@ const Summary = () => {
                         <Text className="text-[#BEBEBE] font-semibold text-xl">Task 2</Text>
                     </View>
                 </View>
-                <View className="flex flex-row mb-4">
+                <View className="flex flex-row mb-2">
                     <View className="basis-1/2 justify-center items-center">
                         <FontAwesome name="circle" size={18} color="#6EEADF" />
                     </View>
