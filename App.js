@@ -2,6 +2,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import Summary from './components/Summary';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { NativeWindStyleSheet } from "nativewind";
+import History from './components/History';
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 
 export default function App() {
@@ -24,6 +30,7 @@ export default function App() {
             </LinearGradient>
         </View>
       </View>
+      <History />
     </View>
   );
 };
