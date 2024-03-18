@@ -3,7 +3,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const Summary = () => {
   return (
-    <View className="container mt-16 w-10/12 rounded-3xl bg-[#27252F] justify-center p-6">
+    <View className="container mt-16 w-10/12 rounded-3xl bg-[#27252F] justify-center p-4">
         <Text className="text-[#BEBEBE] text-center font-bold text-2xl">SUMMARY</Text>
         <View className="flex flex-row mt-3">
             <View className="basis-1/2">
