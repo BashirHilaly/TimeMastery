@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, Pressable, FlatList, Animated } from 'react-native';
 import React from 'react';
 import Summary from './components/Summary';
+import History from './components/History';
+import Task from './components/Task';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { NativeWindStyleSheet } from "nativewind";
-import History from './components/History';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -49,7 +50,7 @@ export default class App extends React.Component {
                 <View>
                   <FlatList
                     data={data}
-                    renderItem={({ item }) => <Text>{item}</Text>}
+                    renderItem={({ item }) => <Task taskName={item} taskColor={'#fffff'}/>}
                     keyExtractor={item => "" + item}
                   />
                 </View>
