@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, FlatList, PanResponder, Animated } from 'react-native';
+import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView } from 'react-native';
 import React, {useRef, useState} from 'react';
 import Summary from './components/Summary';
 import History from './components/History';
@@ -16,11 +16,12 @@ NativeWindStyleSheet.setOutput({
 
 // For dragging https://www.youtube.com/watch?v=tsM3N_7bNcE 
 
+const initialData = [{ taskName: "Task 1", taskColor: "#CFAADF"}, { taskName: "Task 2", taskColor: "#FEDA98"}]
+
 const App = () => {
 
-  const data = [{ taskName: "Task 1", taskColor: "#CFAADF"}, { taskName: "Task 2", taskColor: "#FEDA98"}]
+  const [data, setData] = useState(initialData);
 
-  const [carriedTask, setCarriedTask] = useState(null);
 
 
   return (
@@ -40,15 +41,10 @@ const App = () => {
                 </View>
                 <View className="h-px my-2 border-1 bg-[#6D6D6D]"/>
               </Pressable>
-              <View>
-                <FlatList
-                  className="p-2"
-                  data={data}
-                  renderItem={({ item }) => 
+              <View className="p-2">
+                {data.map(item => (
                   <Task taskName={item.taskName} taskColor={item.taskColor}/>
-                }
-                  keyExtractor={item => "" + item.taskName}
-                />
+                ))}
               </View>
             </LinearGradient>
         </View>
