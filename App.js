@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, FlatList, PanResponder, Animated } from 'react-native';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import Summary from './components/Summary';
 import History from './components/History';
 import Task from './components/Task';
@@ -17,60 +17,11 @@ NativeWindStyleSheet.setOutput({
 // For dragging https://www.youtube.com/watch?v=tsM3N_7bNcE 
 
 const App = () => {
-  const pan = useRef(new Animated.ValueXY()).current;
 
   const data = [{ taskName: "Task 1", taskColor: "#CFAADF"}, { taskName: "Task 2", taskColor: "#FEDA98"}]
 
-  const panResponder = React.useRef(
-    PanResponder.create({
-      // Ask to be the responder:
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) =>
-        true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) =>
-        true,
+  const [carriedTask, setCarriedTask] = useState(null);
 
-      onPanResponderGrant: (evt, gestureState) => {
-        console.log('Selected');
-        pickUpTask();
-        // The gesture has started. Show visual feedback so the user knows
-        // what is happening!
-        // gestureState.d{x,y} will be set to zero now
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        console.log(gestureState);
-        // The most recent move distance is gestureState.move{X,Y}
-        // The accumulated gesture distance since becoming responder is
-        // gestureState.d{x,y}
-      },
-      onPanResponderTerminationRequest: (evt, gestureState) =>
-        true,
-      onPanResponderRelease: (evt, gestureState) => {
-        // The user has released all touches while this view is the
-        // responder. This typically means a gesture has succeeded
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-        // Another component has become the responder, so this gesture
-        // should be cancelled
-      },
-      onShouldBlockNativeResponder: (evt, gestureState) => {
-        // Returns whether this component should block native components from becoming the JS
-        // responder. Returns true by default. Is currently only supported on android.
-        return true;
-      },
-    }),
-  ).current;
-
-    const grabAnim = useRef(new Animated.Value(1)).current;
-
-  const pickUpTask = () => {
-    Animated.spring(grabAnim, {
-      toValue: 1.5,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start();
-  };
 
   return (
     <View className="flex-1 items-center bg-[#141319] min-h-screen">
@@ -94,11 +45,7 @@ const App = () => {
                   className="p-2"
                   data={data}
                   renderItem={({ item }) => 
-                  <Animated.View 
-                  style={{ scale: grabAnim }}
-                  {...panResponder.panHandlers}>
-                    <Task taskName={item.taskName} taskColor={item.taskColor}/>
-                  </Animated.View>
+                  <Task taskName={item.taskName} taskColor={item.taskColor}/>
                 }
                   keyExtractor={item => "" + item.taskName}
                 />
