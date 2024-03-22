@@ -43,7 +43,7 @@ const App = () => {
               </Pressable>
               <View className="p-2">
                 {data.map(item => (
-                  <Task taskName={item.taskName} taskColor={item.taskColor}/>
+                  <Task key={item.taskName} taskName={item.taskName} taskColor={item.taskColor}/>
                 ))}
               </View>
             </LinearGradient>
