@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import { StyleSheet, Text, View, Pressable, TextInput, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, Pressable, TextInput, Modal, TouchableWithoutFeedback  } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import Task from './Task';
@@ -36,22 +36,31 @@ const AddTask = ({ tasks }) => {
                     setModalVisible(!modalVisible);
                     }}
                 >
-                    <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <TextInput
-                        placeholder="Name"
-                        style={styles.input}
-                        onChangeText={text => handleInputChange('name', text)}
-                        />
-                        <TextInput
-                        placeholder="Email"
-                        style={styles.input}
-                        onChangeText={text => handleInputChange('email', text)}
-                        />
-                        <Button title="Submit" onPress={handleSubmit} />
-                        <Button title="Cancel" onPress={() => setModalVisible(false)} />
-                    </View>
-                    </View>
+                    <TouchableWithoutFeedback  onPress={() => setModalVisible(false)}>
+                        <View className="flex-1 items-center justify-center bg-black/60 bg-opacity-20 ">
+                            <View className="bg-[#141319] p-10 rounded-2xl w-4/5">
+                                <TextInput 
+                                className="bg-slate-200 border border-slate-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                                placeholder="Task Name" 
+                                onChangeText={text => handleInputChange('name', text)} />
+                                <TextInput
+                                placeholder="Email"
+                                className="bg-slate-200 border border-slate-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                onChangeText={text => handleInputChange('email', text)}
+                                />
+                                <Pressable title="Submit" onPress={handleSubmit} className="w-1/3 mx-auto">
+                                    <LinearGradient className="p-2 rounded-md " colors={['#66BB6A', '#388E3C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+                                        <Text className="text-center text-white">Add</Text>
+                                    </LinearGradient>
+                                </Pressable >
+                                <Pressable title="Cancel" onPress={() => setModalVisible(false)} className="w-1/3 mx-auto">
+                                    <LinearGradient className="p-2 rounded-md " colors={['#EF5350', '#B71C1C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+                                        <Text className="text-center text-white">Cancel</Text>
+                                    </LinearGradient>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback >
                 </Modal>
 
                 <Text className="text-[#BEBEBE] font-bold text-xl text-center">ADD TASK</Text>
