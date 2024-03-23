@@ -32,7 +32,7 @@ const App = () => {
         <FontAwesome name="long-arrow-right" size={22} color="#5C5A5A" />
       </View>
       <View className="container h-64 flex flex-row w-10/12">
-        <View className="basis-1/2 items-start">
+        <View className="basis-1/2 items-start z-30">
             <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#335650', '#3E7969']} style={{ flex: 1 }}>
               <Pressable onPress={() => alert('You pressed a button.')}>
                 <Text className="text-[#BEBEBE] font-bold text-xl text-center">ADD TASK</Text>
@@ -48,7 +48,7 @@ const App = () => {
               </View>
             </LinearGradient>
         </View>
-        <View className="basis-1/2 items-end">
+        <View className="basis-1/2 items-end z-10">
             <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#3C3258', '#5A478E']} style={{ flex: 1 }}>
               <View className="mx-auto pt-2">
                 <AntDesign name="clockcircleo" size={30} color="#BEBEBE" />
