@@ -7,14 +7,16 @@ const Task = ({ taskName, taskColor }) => {
 
     const pan = useRef(new Animated.ValueXY()).current;
 
-    const [pickedUpTask, setPickedUpTask] = useState();
-    const [opacity, setOpacity] = useState(1);
+    const [pickedUp, setPickedUp] = useState(false);
+
   
     const pickUpTask = () => {
+        setPickedUp(true);
         console.log('Task picked up');
         fadeOut();
     }
     const putDownTask = () => {
+        setPickedUp(false);
         console.log('Task put down');
         fadeIn();
     }
@@ -42,15 +44,22 @@ const Task = ({ taskName, taskColor }) => {
     const panResponder = useRef(
         PanResponder.create({
           onStartShouldSetPanResponder: () => true,
-          onPanResponderMove: Animated.event(
-            [null, { dx: pan.x, dy: pan.y }],
-            { useNativeDriver: true }
-          ),
+          onMoveShouldSetPanResponder: () => true,
           onPanResponderGrant: () => {
             pickUpTask();
           },
+          onPanResponderMove: (event, gestureState) => {
+            Animated.event(
+                [
+                  null, // raw event argument ignored
+                  { dx: pan.x, dy: pan.y }, // gestureState args mapped to dx, dy
+                ],
+                { useNativeDriver: false } // ensure useNativeDriver is false if you're updating non-native properties
+              )(event, gestureState); // Call Animated.event as a function with the event and gestureState
+              console.log(pan.x._value, pan.y._value); // Log the updated values
+          },
           onPanResponderRelease: () => {
-            Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
+            Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
             putDownTask();
           }
         })
@@ -59,7 +68,7 @@ const Task = ({ taskName, taskColor }) => {
     return (
         <Animated.View 
             style={{
-                transform: pan.getTranslateTransform(),
+                transform: [{translateX: pan.x}, {translateY: pan.y}],
                 opacity: fadeAnim
             }}
             {...panResponder.panHandlers}

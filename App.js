@@ -26,7 +26,7 @@ const App = () => {
 
   return (
     <View className="flex-1 items-center bg-[#141319] min-h-screen">
-      <Summary />
+      <Summary tasks={data} />
       <Text className="text-[#5C5A5A] [text-shadow:_0_2px_4px_rgb(0_0_0_/_30%)] mt-2">Drag task to start timer</Text>
       <View className='-mt-2'>
         <FontAwesome name="long-arrow-right" size={22} color="#5C5A5A" />
