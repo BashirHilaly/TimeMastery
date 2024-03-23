@@ -2,7 +2,8 @@ import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView } from 'react
 import React, {useRef, useState} from 'react';
 import Summary from './components/Summary';
 import History from './components/History';
-import Task from './components/Task';
+import AddTask from './components/AddTask';
+import OngoingTasks from './components/OngoingTasks';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { NativeWindStyleSheet } from "nativewind";
@@ -33,29 +34,10 @@ const App = () => {
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start z-30">
-            <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#335650', '#3E7969']} style={{ flex: 1 }}>
-              <Pressable onPress={() => alert('You pressed a button.')}>
-                <Text className="text-[#BEBEBE] font-bold text-xl text-center">ADD TASK</Text>
-                <View className="mx-auto -mt-1">
-                  <Ionicons name="add-outline" size={20} color="#BEBEBE" />
-                </View>
-                <View className="h-px my-2 border-1 bg-[#6D6D6D]"/>
-              </Pressable>
-              <View className="p-2">
-                {data.map(item => (
-                  <Task key={item.taskName} taskName={item.taskName} taskColor={item.taskColor}/>
-                ))}
-              </View>
-            </LinearGradient>
+            <AddTask tasks={data} />
         </View>
         <View className="basis-1/2 items-end z-10">
-            <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#3C3258', '#5A478E']} style={{ flex: 1 }}>
-              <View className="mx-auto pt-2">
-                <AntDesign name="clockcircleo" size={30} color="#BEBEBE" />
-              </View>
-              <View className="h-px my-2 border-1 bg-[#6D6D6D] mt-3"/>
-              <Text className="text-[8px] text-[#5C5A5A] text-center -mt-1">Ongoing tasks</Text>
-            </LinearGradient>
+          <OngoingTasks />
         </View>
       </View>
       <History />

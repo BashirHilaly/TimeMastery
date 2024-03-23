@@ -5,6 +5,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const Summary = ({ tasks }) => {
 
+    // Max 3 tasks in the summary
+    const summaryTasks = tasks.slice(0, 3);
+
     const colors = tasks.map(task => task.taskColor);
 
     return (
@@ -24,30 +27,16 @@ const Summary = ({ tasks }) => {
                     </LinearGradient>
                 </View>
                 <View className="basis-1/2">
-                    <View className="flex flex-row mb-2">
-                        <View className="basis-1/2 justify-center items-center">
-                            <FontAwesome name="circle" size={18} color="#CFAADF" />
+                    {summaryTasks.map(item => (
+                        <View className="flex flex-row mb-2" key={item.taskName}>
+                            <View className="basis-1/2 justify-center items-center">
+                                <FontAwesome name="circle" size={18} color={item.taskColor} />
+                            </View>
+                            <View className="basis-1/2">
+                                <Text className="text-[#BEBEBE] font-semibold text-xl">{item.taskName}</Text>
+                            </View>
                         </View>
-                        <View className="basis-1/2">
-                            <Text className="text-[#BEBEBE] font-semibold text-xl">Task 1</Text>
-                        </View>
-                    </View>
-                    <View className="flex flex-row mb-2">
-                        <View className="basis-1/2 justify-center items-center">
-                            <FontAwesome name="circle" size={18} color="#FEDA98" />
-                        </View>
-                        <View className="basis-1/2">
-                            <Text className="text-[#BEBEBE] font-semibold text-xl">Task 2</Text>
-                        </View>
-                    </View>
-                    <View className="flex flex-row mb-2">
-                        <View className="basis-1/2 justify-center items-center">
-                            <FontAwesome name="circle" size={18} color="#6EEADF" />
-                        </View>
-                        <View className="basis-1/2">
-                            <Text className="text-[#BEBEBE] font-semibold text-xl">Task 3</Text>
-                        </View>
-                    </View>                
+                    ))}             
                 </View>
             </View>
         </View>
