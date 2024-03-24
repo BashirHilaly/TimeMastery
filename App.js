@@ -17,13 +17,15 @@ NativeWindStyleSheet.setOutput({
 
 // For dragging https://www.youtube.com/watch?v=tsM3N_7bNcE 
 
-const initialData = [{ taskName: "Task 1", taskColor: "#CFAADF"}, { taskName: "Task 2", taskColor: "#FEDA98"}]
+const initialData = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
 const App = () => {
 
   const [data, setData] = useState(initialData);
 
-
+  const addTaskToList = (newTask) => {
+    setData([...data, newTask])
+  }
 
   return (
     <View className="flex-1 items-center bg-[#141319] min-h-screen">

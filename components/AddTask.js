@@ -1,66 +1,152 @@
-import React, {useRef, useState} from 'react';
-import { StyleSheet, Text, View, Pressable, TextInput, Modal, TouchableWithoutFeedback  } from 'react-native';
+import React, {useRef, useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Pressable, TextInput, Modal, Alert, Animated  } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import tailwind from 'nativewind';
+
+
 import Task from './Task';
 
+const colors = ['#6EFAFB', '#EE4266', '#89FC00', '#FCCA46', '#247BA0']
 
+const ScalePressable = ({ color, onPress, scale }) => {
+    return (
+      <Pressable onPress={() => onPress(color)} className="p-3">
+        <Animated.View style={[{ transform: [{ scale }]}]}>
+            <FontAwesome name="circle" size={25} color={color} />
+        </Animated.View>
+      </Pressable>
+    );
+  };
 
-const AddTask = ({ tasks }) => {
+const AddTask = ({ tasks, onAddTask }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [formData, setFormData] = useState({});
+    const [selectedColor, setSelectedColor] = useState();
+    useEffect(() => {
+        console.log('Selected Color: ', selectedColor);
+      }, [selectedColor]);
+      
 
     const handleInputChange = (name, value) => {
         setFormData(prevState => ({ ...prevState, [name]: value }));
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value,
+            taskColor: selectedColor,
+            taskTotalTime: 0,
+            taskCurrentTime: 0
+          }));
     };
+
+    const createTwoButtonAlert = () =>
+        Alert.alert('Invalid Task Input', 'Please fill out all inputs', [
+        {
+            text: 'Ok',
+            onPress: () => console.log('Ok')
+        }
+    ]);
+
+    const isEmpty = (obj) => {
+        return Object.keys(obj).length === 0 && obj.constructor === Object;
+    }
+
+    // loop through current tasks to see if any have matching names
+    const commonNames = (task) => {
+
+    }
     
     const handleSubmit = () => {
         // Handle form submission
-        console.log(formData);
-        setModalVisible(false);
+        //console.log(formData);
+        if (formData.taskName === '' || isEmpty(formData)){
+            createTwoButtonAlert();
+        }
+        else {
+            // Check if name is eligible
+            // Add color to form data
+            //setFormData(formData.taskColor );
+            console.log(formData);
+            // Add object
+            //onAddTask(formData);
+            setModalVisible(false);
+        }
+        setFormData({});
     };
-    
 
-    // Change All buttons to Pressables
+    const [possibleColors, setPossibleColors] = useState(colors);
+    const scaleAnim = useRef(new Map()).current;
+
+    const createScaleAnimation = (color) => {
+        if (!scaleAnim.has(color)) {
+          scaleAnim.set(color, new Animated.Value(1));
+        }
+        return scaleAnim.get(color);
+      };
+    
+      const onPressHandler = (color) => {
+        setSelectedColor(color);
+        if (selectedColor) {
+          Animated.timing(scaleAnim.get(selectedColor), {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }).start();
+        }
+        Animated.timing(scaleAnim.get(color), {
+          toValue: 1.6,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      };
+
+
 
     return (
         <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#335650', '#3E7969']} style={{ flex: 1 }}>
             <Pressable onPress={() => setModalVisible(true)}>
 
                 <Modal
-                    animationType="slide"
+                    animationType="slcolore"
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {
                     setModalVisible(!modalVisible);
+
                     }}
                 >
-                    <TouchableWithoutFeedback  onPress={() => setModalVisible(false)}>
-                        <View className="flex-1 items-center justify-center bg-black/60 bg-opacity-20 ">
-                            <View className="bg-[#141319] p-10 rounded-2xl w-4/5">
-                                <TextInput 
-                                className="bg-slate-200 border border-slate-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                                placeholder="Task Name" 
-                                onChangeText={text => handleInputChange('name', text)} />
-                                <TextInput
-                                placeholder="Email"
-                                className="bg-slate-200 border border-slate-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                onChangeText={text => handleInputChange('email', text)}
-                                />
+                    <View className="flex-1 items-center justify-center bg-black/60 bg-opacity-20 ">
+                        <View className="bg-[#141319] p-10 rounded-2xl w-4/5">
+                            <TextInput 
+                            className="bg-slate-200 border border-slate-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                            placeholder="Task Name" 
+                            onChangeText={text => handleInputChange('taskName', text)} />
+                            <View className="flex flex-row mx-auto mt-3">
+                                {possibleColors.map(color => (
+                                    <ScalePressable 
+                                        key={color}
+                                        color={color}
+                                        onPress={onPressHandler}
+                                        scale={createScaleAnimation(color)}
+                                    />
+                                ))}
+                            </View>
+                            <View className="flex flex-row mt-4">
                                 <Pressable title="Submit" onPress={handleSubmit} className="w-1/3 mx-auto">
                                     <LinearGradient className="p-2 rounded-md " colors={['#66BB6A', '#388E3C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-                                        <Text className="text-center text-white">Add</Text>
+                                        <Text className="text-center text-white font-normal text-base">Add</Text>
                                     </LinearGradient>
                                 </Pressable >
                                 <Pressable title="Cancel" onPress={() => setModalVisible(false)} className="w-1/3 mx-auto">
                                     <LinearGradient className="p-2 rounded-md " colors={['#EF5350', '#B71C1C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-                                        <Text className="text-center text-white">Cancel</Text>
+                                        <Text className="text-center text-white font-normal text-base">Cancel</Text>
                                     </LinearGradient>
                                 </Pressable>
                             </View>
                         </View>
-                    </TouchableWithoutFeedback >
+                    </View>
                 </Modal>
 
                 <Text className="text-[#BEBEBE] font-bold text-xl text-center">ADD TASK</Text>
@@ -78,34 +164,13 @@ const AddTask = ({ tasks }) => {
     )
 }
 
-const styles = StyleSheet.create({
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-        width: 0,
-        height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    input: {
-        height: 40,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
-        width: '80%',
+const styles = (scaleAnim) => StyleSheet.create({
+    selectedPressable: {
+        // Styles for the selected Pressable, e.g., a ring around it
+        borderColor: 'white',
+        borderWcolorth: 2,
+        borderRadius: 10,
+        transform: [{scale: scaleAnim}]
     },
 });
 

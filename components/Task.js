@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, PanResponder, Animated, Pressable } from 'react
 import { FontAwesome } from '@expo/vector-icons';
 
 
-const Task = ({ taskName, taskColor }) => {
+const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime }) => {
 
     const pan = useRef(new Animated.ValueXY()).current;
 
