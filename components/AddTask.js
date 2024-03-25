@@ -41,37 +41,51 @@ const AddTask = ({ tasks, onAddTask }) => {
           }));
     };
 
-    const createTwoButtonAlert = () =>
+    const missingInputAlert = () =>
         Alert.alert('Invalid Task Input', 'Please fill out all inputs', [
         {
             text: 'Ok',
             onPress: () => console.log('Ok')
         }
     ]);
+    const taskNameExistsAlert = () =>
+    Alert.alert('Invalid Task Input', 'Task name already exists', [
+    {
+        text: 'Ok',
+        onPress: () => console.log('Ok')
+    }
+]);
 
     const isEmpty = (obj) => {
         return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
 
     // loop through current tasks to see if any have matching names
-    const commonNames = (task) => {
-
+    const commonNames = (name) => {
+        return tasks.some(task => task.taskName.toLowerCase() === name.toLowerCase());
     }
     
     const handleSubmit = () => {
         // Handle form submission
         //console.log(formData);
         if (formData.taskName === '' || isEmpty(formData)){
-            createTwoButtonAlert();
+            missingInputAlert();
         }
         else {
             // Check if name is eligible
-            // Add color to form data
-            setFormData(formData.taskColor = selectedColor);
-            console.log(formData);
-            // Add object
-            //onAddTask(formData);
-            setModalVisible(false);
+            if (!commonNames(formData.taskName))
+            {
+                // Add color to form data
+                setFormData(formData.taskColor = selectedColor);
+                console.log(formData);
+                // Add object
+                onAddTask(formData);
+                setModalVisible(false);
+            }
+            else{
+                taskNameExistsAlert();
+                console.log('Task with the same name exists');
+            }
         }
         setFormData({});
     };
