@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import Summary from './components/Summary';
 import History from './components/History';
 import AddTask from './components/AddTask';
@@ -26,11 +26,12 @@ const App = () => {
 
   const [tasks, setTasks] = useState(initialtasks);
 
+
   const addTaskToList = (newTask) => {
     setTasks([...tasks, newTask])
   }
   const removeTask = (taskNameToRemove) => {
-    setTasks(tasks.filter(task => task.taskName.toLowerCase() !== taskNameToRemove.toLowerCase()));
+    setTasks(prevTasks => prevTasks.filter(task => task.taskName.toLowerCase() !== taskNameToRemove.toLowerCase()));
   }
 
   const [startedTask, setStartedTask] = useState();
@@ -48,10 +49,10 @@ const App = () => {
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start z-30">
-            <AddTask tasks={tasks} onAddTask={addTaskToList} removeTask={removeTask} startTask={startTask} />
+            <AddTask tasks={tasks} onAddTask={addTaskToList} onRemoveTask={removeTask} startTask={startTask} />
         </View>
         <View className="basis-1/2 items-end z-10">
-          <OngoingTasks startTimer={startedTask}/>
+          <OngoingTasks addOngoingTask={startedTask}/>
         </View>
       </View>
       <History />
