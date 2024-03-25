@@ -24,10 +24,14 @@ const AddTask = ({ tasks, onAddTask }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [formData, setFormData] = useState({});
-    const [selectedColor, setSelectedColor] = useState();
+    const [selectedColor, setSelectedColor] = useState(null);
     useEffect(() => {
         console.log('Selected Color: ', selectedColor);
       }, [selectedColor]);
+    
+    useEffect(() => {
+        console.log('Modal Status: ', modalVisible);
+    }, [modalVisible]);
       
 
     const handleInputChange = (name, value) => {
@@ -68,7 +72,7 @@ const AddTask = ({ tasks, onAddTask }) => {
     const handleSubmit = () => {
         // Handle form submission
         //console.log(formData);
-        if (formData.taskName === '' || isEmpty(formData)){
+        if (formData.taskName === '' || isEmpty(formData) || selectedColor == null){
             missingInputAlert();
         }
         else {
@@ -148,7 +152,10 @@ const AddTask = ({ tasks, onAddTask }) => {
                                 ))}
                             </View>
                             <View className="flex flex-row mt-4">
-                                <Pressable title="Submit" onPress={handleSubmit} className="w-1/3 mx-auto">
+                                <Pressable title="Submit" onPress={() => {
+                                                                handleSubmit();
+                                                                setModalVisible(false);
+                                                                }} className="w-1/3 mx-auto">
                                     <LinearGradient className="p-2 rounded-md " colors={['#66BB6A', '#388E3C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
                                         <Text className="text-center text-white font-normal text-base">Add</Text>
                                     </LinearGradient>
