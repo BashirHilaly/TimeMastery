@@ -29,6 +29,9 @@ const App = () => {
   const addTaskToList = (newTask) => {
     setData([...data, newTask])
   }
+  const removeTask = (taskNameToRemove) => {
+    setData(data.filter(task => task.taskName.toLowerCase() !== taskNameToRemove.toLowerCase()));
+  }
 
   return (
     <View className="flex-1 items-center bg-[#141319] min-h-screen">
@@ -39,7 +42,7 @@ const App = () => {
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start z-30">
-            <AddTask tasks={data} onAddTask={addTaskToList}/>
+            <AddTask tasks={data} onAddTask={addTaskToList} removeTask={removeTask}/>
         </View>
         <View className="basis-1/2 items-end z-10">
           <OngoingTasks />

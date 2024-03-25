@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 
 
-const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime }) => {
+const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime, onRemoveTask }) => {
 
     const pan = useRef(new Animated.ValueXY()).current;
 
@@ -13,12 +13,12 @@ const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime }) => {
   
     const pickUpTask = () => {
         setPickedUp(true);
-        console.log('Task picked up');
+        //console.log('Task picked up');
         fadeOut();
     }
     const putDownTask = () => {
         setPickedUp(false);
-        console.log('Task put down');
+        //console.log('Task put down');
         fadeIn();
     }
 
@@ -64,7 +64,7 @@ const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime }) => {
             // If the task is far left then remove the task
             if (pan.x._value < -65){
               console.log('Task Removed');
-              //removeTask
+              onRemoveTask(taskName);
             }
             // If the task is over the ongoing tasks than start the ongoing task
             if (pan.x._value > 165)
