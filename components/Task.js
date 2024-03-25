@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, PanResponder, Animated, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 
 
-const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime, onRemoveTask }) => {
+const Task = ({ task, onRemoveTask, onStartTask }) => {
 
     const pan = useRef(new Animated.ValueXY()).current;
 
@@ -64,12 +64,13 @@ const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime, onRemoveTas
             // If the task is far left then remove the task
             if (pan.x._value < -65){
               console.log('Task Removed');
-              onRemoveTask(taskName);
+              onRemoveTask(task.taskName);
             }
             // If the task is over the ongoing tasks than start the ongoing task
             if (pan.x._value > 165)
             {
-              console.log('Task started!')
+              console.log('Task started!');
+              onStartTask(task);
             }
             Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
             putDownTask();
@@ -86,10 +87,10 @@ const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime, onRemoveTas
             {...panResponder.panHandlers}
             className="flex flex-row mb-4">
             <View className="basis-1/2 items-start">
-                <FontAwesome name="circle" size={16} color={taskColor} />
+                <FontAwesome name="circle" size={16} color={task.taskColor} />
             </View>
             <View className="basis-1/2 items-end">
-                <Text className="font-semibold text-[#BEBEBE]">{ taskName }</Text>
+                <Text className="font-semibold text-[#BEBEBE]">{ task.taskName }</Text>
             </View>
         </Animated.View>
     )

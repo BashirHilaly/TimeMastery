@@ -20,32 +20,38 @@ NativeWindStyleSheet.setOutput({
 // Storage solution: https://react-native-async-storage.github.io/async-storage/
 
 
-const initialData = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
+const initialtasks = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
 const App = () => {
 
-  const [data, setData] = useState(initialData);
+  const [tasks, setTasks] = useState(initialtasks);
 
   const addTaskToList = (newTask) => {
-    setData([...data, newTask])
+    setTasks([...tasks, newTask])
   }
   const removeTask = (taskNameToRemove) => {
-    setData(data.filter(task => task.taskName.toLowerCase() !== taskNameToRemove.toLowerCase()));
+    setTasks(tasks.filter(task => task.taskName.toLowerCase() !== taskNameToRemove.toLowerCase()));
+  }
+
+  const [startedTask, setStartedTask] = useState();
+
+  const startTask = (task) => {
+    setStartedTask(task)
   }
 
   return (
     <View className="flex-1 items-center bg-[#141319] min-h-screen">
-      <Summary tasks={data} />
+      <Summary tasks={tasks} />
       <Text className="text-[#5C5A5A] [text-shadow:_0_2px_4px_rgb(0_0_0_/_30%)] mt-2">Drag task to start timer</Text>
       <View className='-mt-2'>
         <FontAwesome name="long-arrow-right" size={22} color="#5C5A5A" />
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start z-30">
-            <AddTask tasks={data} onAddTask={addTaskToList} removeTask={removeTask}/>
+            <AddTask tasks={tasks} onAddTask={addTaskToList} removeTask={removeTask} startTask={startTask} />
         </View>
         <View className="basis-1/2 items-end z-10">
-          <OngoingTasks />
+          <OngoingTasks startTimer={startedTask}/>
         </View>
       </View>
       <History />
