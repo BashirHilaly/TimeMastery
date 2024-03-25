@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, PanResponder, Animated, Pressable } from 'react
 import { FontAwesome } from '@expo/vector-icons';
 
 
+
 const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime }) => {
 
     const pan = useRef(new Animated.ValueXY()).current;
@@ -56,9 +57,20 @@ const Task = ({ taskName, taskColor, taskTotalTime, taskCurrentTime }) => {
                 ],
                 { useNativeDriver: false } // ensure useNativeDriver is false if you're updating non-native properties
               )(event, gestureState); // Call Animated.event as a function with the event and gestureState
-              console.log(pan.x._value, pan.y._value); // Log the updated values
+              //console.log(pan.x._value, pan.y._value); // Log the updated values
           },
-          onPanResponderRelease: () => {
+          onPanResponderRelease: (event, gestureState) => {
+
+            // If the task is far left then remove the task
+            if (pan.x._value < -65){
+              console.log('Task Removed');
+              //removeTask
+            }
+            // If the task is over the ongoing tasks than start the ongoing task
+            if (pan.x._value > 165)
+            {
+              console.log('Task started!')
+            }
             Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
             putDownTask();
           }

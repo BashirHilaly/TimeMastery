@@ -17,6 +17,9 @@ NativeWindStyleSheet.setOutput({
 
 // For dragging https://www.youtube.com/watch?v=tsM3N_7bNcE 
 
+// Storage solution: https://react-native-async-storage.github.io/async-storage/
+
+
 const initialData = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
 const App = () => {
