@@ -36,7 +36,7 @@ const App = () => {
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start z-30">
-            <AddTask tasks={data} />
+            <AddTask tasks={data} onnAddTask={addTaskToList}/>
         </View>
         <View className="basis-1/2 items-end z-10">
           <OngoingTasks />

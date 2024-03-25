@@ -67,7 +67,7 @@ const AddTask = ({ tasks, onAddTask }) => {
         else {
             // Check if name is eligible
             // Add color to form data
-            //setFormData(formData.taskColor );
+            setFormData(formData.taskColor = selectedColor);
             console.log(formData);
             // Add object
             //onAddTask(formData);
