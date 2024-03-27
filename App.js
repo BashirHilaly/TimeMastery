@@ -40,7 +40,7 @@ const App = () => {
   }, [tasks]);
 
   const handleAddTask = (newTask) => {
-    previousMaxID = taskData[taskData.length - 1].taskId;
+    previousMaxID = tasks[tasks.length - 1].taskId;
     newTask.taskId = previousMaxID + 1;
     setTasks([...tasks, newTask]);
     console.log('New task: ', newTask);
@@ -82,10 +82,10 @@ const App = () => {
         <FontAwesome name="long-arrow-right" size={22} color="#5C5A5A" />
       </View>
       <View className="container h-64 flex flex-row w-10/12">
-        <View className="basis-1/2 items-start z-30">
+        <View className="basis-1/2 items-start" style={{ zIndex: 10 }}>
             <AddTask tasks={tasks} onAddTask={handleAddTask} onStartTask={handleStartTask} onRemoveTask={handleRemoveTask}/>
         </View>
-        <View className="basis-1/2 items-end z-10">
+        <View className="basis-1/2 items-end" style={{ zIndex: 1 }}>
           <OngoingTasks tasks={tasks} stopTask={handleStopTask}/>
         </View>
       </View>

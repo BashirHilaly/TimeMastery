@@ -3,12 +3,13 @@ import { Text, View, Animated, PanResponder } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
 
+// Constants
+const TIMER_INTERVAL = 1000; // 1 second
+const TIMER_STORAGE_KEY = '@timer:start_time'; // AsyncStorage key to store timer start time
 
-const OngoingTask = ({ task }) => {
-
+const OngoingTask = ({ task, stopTask }) => {
 
     const [pickedUp, setPickedUp] = useState(false);
-
   
     const pickUpTask = () => {
         setPickedUp(true);
@@ -57,33 +58,29 @@ const OngoingTask = ({ task }) => {
                 ],
                 { useNativeDriver: false } // ensure useNativeDriver is false if you're updating non-native properties
               )(event, gestureState); // Call Animated.event as a function with the event and gestureState
-              console.log(pan.x._value, pan.y._value); // Log the updated values
+              // console.log(pan.x._value, pan.y._value); // Log the updated values
           },
           onPanResponderRelease: (event, gestureState) => {
 
             // If the task is far left then remove the task
-            if (pan.x._value < -155){
+            if (pan.x._value < -135){
               //Stop timer for task and update its values
+              //console.log('should work');
               stopTask(task);
+              console.log('Stop Timer');
             }
-            Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
-            putDownTask();
-          },
-          onPanResponderRelease: (event, gestureState) => {
-            Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
-            putDownTask();
+            else {
+              Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
+              putDownTask();
+            }
           }
         })
     ).current;
 
-    useEffect(() => {
 
-    }, [task]);
 
-    if (task.taskStatus == 'NotOngoing')
-    {
-      console.log('Test');
-      return;
+    if (task.taskStatus == 'Ongoing'){
+      console.log('Start Timer');
     }
 
     return (
@@ -95,10 +92,13 @@ const OngoingTask = ({ task }) => {
             }}
             {...panResponder.panHandlers}
             className="flex flex-row mb-4">
-            <View className="basis-1/2 items-start">
+            <View className="basis-1/3 items-start">
                 <FontAwesome name="circle" size={16} color={task.taskColor} />
             </View>
-            <View className="basis-1/2 items-end">
+            <View className='basis-1/3 items-center '>
+              <Text className="text-xs font-normal text-[#BEBEBE]">00:00</Text>
+            </View>
+            <View className="basis-1/3 items-end">
                 <Text className="font-semibold text-[#BEBEBE]">{ task.taskName }</Text>
             </View>
         </Animated.View>

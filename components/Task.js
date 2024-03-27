@@ -67,7 +67,7 @@ const Task = ({ task, onStartTask, onRemoveTask }) => {
               onRemoveTask(task);
             }
             // If the task is over the ongoing tasks than start the ongoing task
-            if (pan.x._value > 165)
+            if (pan.x._value > 135)
             {
               console.log('Task started!');
               onStartTask(task);
