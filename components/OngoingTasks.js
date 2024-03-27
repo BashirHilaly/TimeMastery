@@ -7,20 +7,19 @@ import OngoingTask from './OngoingTask';
 
 // Add a pan handler to end a task when you put it into the left component
 
-const OngoingTasks = ({ addOngoingTask }) => { 
+const OngoingTasks = ({ startedTasks }) => { 
 
     const [ongoingTasks, setOngoingTasks] = useState([]);
 
     useEffect(() => {
-        if (addOngoingTask) {
-            console.log('Task Start Received: ', addOngoingTask);
-            // If addOngoingTask is an array, spread it into the new state
-            // If it's a single task object, wrap it in an array
-            setOngoingTasks(prevState => [...prevState, ...(Array.isArray(addOngoingTask) ? addOngoingTask : [addOngoingTask])]);
-        }
-    }, [addOngoingTask]);
+        console.log('Ongoing Tasks: ', startedTasks);
+        setOngoingTasks([...ongoingTasks, startedTasks]);
+    }, [startedTasks]);
     
-
+    if (ongoingTasks.length == 0){
+        console.log('Empty ongoing tasks');
+        return;
+    }
 
     return (
         <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#3C3258', '#5A478E']} style={{ flex: 1 }}>
@@ -30,8 +29,8 @@ const OngoingTasks = ({ addOngoingTask }) => {
             <View className="h-px my-2 border-1 bg-[#6D6D6D] mt-3"/>
             <Text className="text-[8px] text-[#5C5A5A] text-center -mt-1">Ongoing tasks</Text>
             <View className="p-2">
-            {ongoingTasks?.map(item => (
-                <OngoingTask key={item.taskName} task={item}/>
+            {ongoingTasks?.map(startedTasks => (
+                <OngoingTask key={startedTasks.taskId} task={startedTasks}/>
             ))}
             </View>
         </LinearGradient>

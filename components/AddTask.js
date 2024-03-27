@@ -20,7 +20,7 @@ const ScalePressable = ({ color, onPress, scale }) => {
     );
   };
 
-const AddTask = ({ tasks, onAddTask, onRemoveTask }) => {
+const AddTask = ({ tasks, onAddTask, onStartTask, onRemoveTask }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [formData, setFormData] = useState({});
@@ -183,7 +183,7 @@ const AddTask = ({ tasks, onAddTask, onRemoveTask }) => {
             </Pressable>
             <View className="p-2">
             {tasks.map(item => (
-                <Task key={item.taskId} task={item} onRemoveTask={onRemoveTask}/>
+                <Task key={item.taskId} task={item} onStartTask={onStartTask} onRemoveTask={onRemoveTask}/>
             ))}
             </View>
         </LinearGradient>

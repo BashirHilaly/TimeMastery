@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 
 
-const Task = ({ task, onRemoveTask }) => {
+const Task = ({ task, onStartTask, onRemoveTask }) => {
 
     const pan = useRef(new Animated.ValueXY()).current;
 

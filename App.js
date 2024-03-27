@@ -20,7 +20,7 @@ NativeWindStyleSheet.setOutput({
 // Storage solution: https://react-native-async-storage.github.io/async-storage/
 
 
-const initialtasks = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
+//const initialtasks = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
 const taskData = [{ 
   taskId: 0, taskName: "Task 1", taskColor: "#CFAADF", taskStatus: 'NotOngoing',
@@ -50,11 +50,13 @@ const App = () => {
     console.log('Remove task: ', task);
   }
 
-  const [startedTask, setStartedTask] = useState();
+  const [startedTasks, setStartedTasks] = useState([]);
 
-  const startTask = (task) => {
-    setStartedTask(task)
+  const handleStartTask = (task) => {
+    task.taskStatus = 'Ongoing';
+    setStartedTasks(prevStartedTasks => [...prevStartedTasks, task]);
   }
+
 
   return (
     <View className="flex-1 items-center bg-[#141319] min-h-screen">
@@ -65,10 +67,10 @@ const App = () => {
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start z-30">
-            <AddTask tasks={tasks} onRemoveTask={handleRemoveTask} onAddTask={handleAddTask}/>
+            <AddTask tasks={tasks} onAddTask={handleAddTask} onStartTask={handleStartTask} onRemoveTask={handleRemoveTask}/>
         </View>
         <View className="basis-1/2 items-end z-10">
-          <OngoingTasks addOngoingTask={startedTask}/>
+          <OngoingTasks startedTasks={startedTasks}/>
         </View>
       </View>
       <History />
