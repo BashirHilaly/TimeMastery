@@ -22,16 +22,32 @@ NativeWindStyleSheet.setOutput({
 
 const initialtasks = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
+const taskData = [{ 
+  taskId: 0, taskName: "Task 1", taskColor: "#CFAADF", taskStatus: 'NotOngoing',
+  dayData: [
+    { date: '3/14/2006',
+      totalElapsedTime: 3 }
+    ],
+  totalTime: 10
+}]
+
 const App = () => {
 
-  const [tasks, setTasks] = useState(initialtasks);
+  const [tasks, setTasks] = useState(taskData);
 
+  useEffect(() => {
+    console.log('Tasks: ', tasks);
+  }, [tasks]);
 
-  const addTaskToList = (newTask) => {
-    setTasks([...tasks, newTask])
+  const handleAddTask = (newTask) => {
+    previousMaxID = taskData[taskData.length - 1].taskId;
+    newTask.taskId = previousMaxID + 1;
+    setTasks([...tasks, newTask]);
+    console.log('New task: ', newTask);
   }
-  const removeTask = (taskNameToRemove) => {
-    setTasks(prevTasks => prevTasks.filter(task => task.taskName.toLowerCase() !== taskNameToRemove.toLowerCase()));
+  const handleRemoveTask = (task) => {
+    setTasks(currentTasks => currentTasks.filter(task => task.taskId !== task.taskId));
+    console.log('Remove task: ', task);
   }
 
   const [startedTask, setStartedTask] = useState();
@@ -49,7 +65,7 @@ const App = () => {
       </View>
       <View className="container h-64 flex flex-row w-10/12">
         <View className="basis-1/2 items-start z-30">
-            <AddTask tasks={tasks} onAddTask={addTaskToList} onRemoveTask={removeTask} startTask={startTask} />
+            <AddTask tasks={tasks} onRemoveTask={handleRemoveTask} onAddTask={handleAddTask}/>
         </View>
         <View className="basis-1/2 items-end z-10">
           <OngoingTasks addOngoingTask={startedTask}/>

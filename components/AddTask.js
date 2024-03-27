@@ -20,7 +20,7 @@ const ScalePressable = ({ color, onPress, scale }) => {
     );
   };
 
-const AddTask = ({ tasks, onAddTask, onRemoveTask, startTask }) => {
+const AddTask = ({ tasks, onAddTask, onRemoveTask }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [formData, setFormData] = useState({});
@@ -35,14 +35,19 @@ const AddTask = ({ tasks, onAddTask, onRemoveTask, startTask }) => {
       
 
     const handleInputChange = (name, value) => {
-        setFormData(prevState => ({ ...prevState, [name]: value }));
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value,
-            taskColor: selectedColor,
-            taskTotalTime: 0,
-            taskCurrentTime: 0
-          }));
+        // Create new item with an incremented id
+        const newTask = { 
+            taskId: null, taskName: value, taskColor: selectedColor, taskStatus: 'NotOngoing',
+            dayData: [
+                { date: null,
+                totalElapsedTime: 0 }
+                ],
+            totalTime: 0
+        }
+        
+        // Update the state to include the new item
+        // Update the state to include the new item
+        setFormData(newTask);
     };
 
     const missingInputAlert = () =>
@@ -51,14 +56,14 @@ const AddTask = ({ tasks, onAddTask, onRemoveTask, startTask }) => {
             text: 'Ok',
             onPress: () => console.log('Ok')
         }
+        ]);
+        const taskNameExistsAlert = () =>
+        Alert.alert('Invalid Task Input', 'Task name already exists', [
+        {
+            text: 'Ok',
+            onPress: () => console.log('Ok')
+        }
     ]);
-    const taskNameExistsAlert = () =>
-    Alert.alert('Invalid Task Input', 'Task name already exists', [
-    {
-        text: 'Ok',
-        onPress: () => console.log('Ok')
-    }
-]);
 
     const isEmpty = (obj) => {
         return Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -81,7 +86,7 @@ const AddTask = ({ tasks, onAddTask, onRemoveTask, startTask }) => {
             {
                 // Add color to form data
                 setFormData(formData.taskColor = selectedColor);
-                console.log(formData);
+                //console.log(formData);
                 // Add object
                 onAddTask(formData);
                 setModalVisible(false);
@@ -99,26 +104,26 @@ const AddTask = ({ tasks, onAddTask, onRemoveTask, startTask }) => {
 
     const createScaleAnimation = (color) => {
         if (!scaleAnim.has(color)) {
-          scaleAnim.set(color, new Animated.Value(1));
+            scaleAnim.set(color, new Animated.Value(1));
         }
         return scaleAnim.get(color);
-      };
+    };
     
-      const onPressHandler = (color) => {
+    const onPressHandler = (color) => {
         setSelectedColor(color);
         if (selectedColor) {
-          Animated.timing(scaleAnim.get(selectedColor), {
+            Animated.timing(scaleAnim.get(selectedColor), {
             toValue: 1,
             duration: 200,
             useNativeDriver: true,
-          }).start();
+            }).start();
         }
         Animated.timing(scaleAnim.get(color), {
-          toValue: 1.6,
-          duration: 200,
-          useNativeDriver: true,
+            toValue: 1.6,
+            duration: 200,
+            useNativeDriver: true,
         }).start();
-      };
+    };
 
 
 
@@ -178,7 +183,7 @@ const AddTask = ({ tasks, onAddTask, onRemoveTask, startTask }) => {
             </Pressable>
             <View className="p-2">
             {tasks.map(item => (
-                <Task key={item.taskName} task={item} onRemoveTask={onRemoveTask} onStartTask={startTask}/>
+                <Task key={item.taskId} task={item} onRemoveTask={onRemoveTask}/>
             ))}
             </View>
         </LinearGradient>

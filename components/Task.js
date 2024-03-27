@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 
 
-const Task = ({ task, onRemoveTask, onStartTask }) => {
+const Task = ({ task, onRemoveTask }) => {
 
     const pan = useRef(new Animated.ValueXY()).current;
 
@@ -63,8 +63,8 @@ const Task = ({ task, onRemoveTask, onStartTask }) => {
 
             // If the task is far left then remove the task
             if (pan.x._value < -65){
-              console.log('Task Removed');
-              onRemoveTask(task.taskName);
+              //console.log('Task Removed');
+              onRemoveTask(task);
             }
             // If the task is over the ongoing tasks than start the ongoing task
             if (pan.x._value > 165)
@@ -76,23 +76,29 @@ const Task = ({ task, onRemoveTask, onStartTask }) => {
             putDownTask();
           }
         })
-      ).current;
+    ).current;
+
+    if (task.taskStatus === 'Ongoing'){
+      return;
+    }
 
     return (
-        <Animated.View 
-            style={{
-                transform: [{translateX: pan.x}, {translateY: pan.y}],
-                opacity: fadeAnim
-            }}
-            {...panResponder.panHandlers}
-            className="flex flex-row mb-4">
-            <View className="basis-1/2 items-start">
-                <FontAwesome name="circle" size={16} color={task.taskColor} />
-            </View>
-            <View className="basis-1/2 items-end">
-                <Text className="font-semibold text-[#BEBEBE]">{ task.taskName }</Text>
-            </View>
-        </Animated.View>
+        <View>
+          <Animated.View 
+              style={{
+                  transform: [{translateX: pan.x}, {translateY: pan.y}],
+                  opacity: fadeAnim
+              }}
+              {...panResponder.panHandlers}
+              className="flex flex-row mb-4">
+              <View className="basis-1/2 items-start">
+                  <FontAwesome name="circle" size={16} color={task.taskColor} />
+              </View>
+              <View className="basis-1/2 items-end">
+                  <Text className="font-semibold text-[#BEBEBE]">{ task.taskName }</Text>
+              </View>
+          </Animated.View>
+        </View>
     )
 }
 
