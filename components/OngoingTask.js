@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
 
 
-const OngoingTask = ( task ) => {
+const OngoingTask = ({ task }) => {
 
     const [startTime, setStartTime] = useState(null);
     const [isActive, setIsActive] = useState(false);
@@ -119,6 +119,8 @@ const OngoingTask = ( task ) => {
           }
         })
     ).current;
+
+
 
     return (
       <View>

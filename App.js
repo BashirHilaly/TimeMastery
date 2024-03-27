@@ -52,9 +52,11 @@ const App = () => {
 
   const [startedTasks, setStartedTasks] = useState([]);
 
+
   const handleStartTask = (task) => {
     task.taskStatus = 'Ongoing';
     setStartedTasks(prevStartedTasks => [...prevStartedTasks, task]);
+    console.log('Started tasks: ', startedTasks);
   }
 
 
@@ -70,7 +72,7 @@ const App = () => {
             <AddTask tasks={tasks} onAddTask={handleAddTask} onStartTask={handleStartTask} onRemoveTask={handleRemoveTask}/>
         </View>
         <View className="basis-1/2 items-end z-10">
-          <OngoingTasks startedTasks={startedTasks}/>
+          <OngoingTasks tasks={tasks}/>
         </View>
       </View>
       <History />
