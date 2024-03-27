@@ -78,9 +78,6 @@ const Task = ({ task, onStartTask, onRemoveTask }) => {
         })
     ).current;
 
-    if (task.taskStatus === 'Ongoing'){
-      return;
-    }
 
     return (
         <View>

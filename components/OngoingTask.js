@@ -6,60 +6,6 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const OngoingTask = ({ task }) => {
 
-    const [startTime, setStartTime] = useState(null);
-    const [isActive, setIsActive] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
-  
-    useEffect(() => {
-      const initializeTime = async () => {
-        const storedStartTime = await AsyncStorage.getItem('startTime');
-        if (storedStartTime && !isActive) {
-          setStartTime(new Date(storedStartTime));
-          setTimeElapsed(Math.floor((new Date() - new Date(storedStartTime)) / 1000));
-        }
-      };
-  
-      initializeTime();
-    }, []);
-  
-    useEffect(() => {
-      let interval = null;
-      if (isActive) {
-        if (!startTime) {
-          const now = new Date();
-          setStartTime(now);
-          AsyncStorage.setItem('startTime', now.toISOString());
-        }
-        interval = setInterval(() => {
-          setTimeElapsed(elapsed => elapsed + 1);
-        }, 1000);
-      } else {
-        clearInterval(interval);
-      }
-      return () => clearInterval(interval);
-    }, [isActive, startTime]);
-  
-    const toggle = () => {
-      setIsActive(!isActive);
-      if (!isActive) {
-        AsyncStorage.removeItem('startTime');
-        setStartTime(null);
-      }
-    };
-  
-    const reset = () => {
-      setTimeElapsed(0);
-      setIsActive(false);
-      AsyncStorage.removeItem('startTime');
-      setStartTime(null);
-    };
-  
-    const formatTime = () => {
-      const hours = Math.floor(timeElapsed / 3600);
-      const minutes = Math.floor((timeElapsed % 3600) / 60);
-      const seconds = timeElapsed % 60;
-      return `${hours}h ${minutes}m ${seconds}s`;
-    };
 
     const [pickedUp, setPickedUp] = useState(false);
 
@@ -114,13 +60,31 @@ const OngoingTask = ({ task }) => {
               console.log(pan.x._value, pan.y._value); // Log the updated values
           },
           onPanResponderRelease: (event, gestureState) => {
+
+            // If the task is far left then remove the task
+            if (pan.x._value < -155){
+              //Stop timer for task and update its values
+              stopTask(task);
+            }
+            Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
+            putDownTask();
+          },
+          onPanResponderRelease: (event, gestureState) => {
             Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
             putDownTask();
           }
         })
     ).current;
 
+    useEffect(() => {
 
+    }, [task]);
+
+    if (task.taskStatus == 'NotOngoing')
+    {
+      console.log('Test');
+      return;
+    }
 
     return (
       <View>

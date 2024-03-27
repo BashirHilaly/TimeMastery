@@ -25,6 +25,7 @@ const AddTask = ({ tasks, onAddTask, onStartTask, onRemoveTask }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [formData, setFormData] = useState({});
     const [selectedColor, setSelectedColor] = useState(null);
+    
     useEffect(() => {
         console.log('Selected Color: ', selectedColor);
       }, [selectedColor]);
@@ -183,7 +184,7 @@ const AddTask = ({ tasks, onAddTask, onStartTask, onRemoveTask }) => {
             </Pressable>
             <View className="p-2">
             {tasks.map(item => (
-                <Task key={item.taskId} task={item} onStartTask={onStartTask} onRemoveTask={onRemoveTask}/>
+                item.taskStatus === 'NotOngoing' && <Task key={item.taskId} task={item} onStartTask={onStartTask} onRemoveTask={onRemoveTask}/>
             ))}
             </View>
         </LinearGradient>

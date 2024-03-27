@@ -7,8 +7,9 @@ import OngoingTask from './OngoingTask';
 
 // Add a pan handler to end a task when you put it into the left component
 
-const OngoingTasks = ({ tasks }) => { 
-    
+const OngoingTasks = ({ tasks, stopTask }) => {
+     
+
     return (
         <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#3C3258', '#5A478E']} style={{ flex: 1 }}>
             <View className="mx-auto pt-2">
@@ -19,7 +20,7 @@ const OngoingTasks = ({ tasks }) => {
             <View className="p-2">
             {
                 tasks.map(task => (
-                    task.taskStatus === 'Ongoing' && <OngoingTask key={task.taskId} task={task} />
+                    task.taskStatus === 'Ongoing' && <OngoingTask key={task.taskId} task={task} stopTask={stopTask}/>
                 ))
             }
             </View>

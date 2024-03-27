@@ -50,13 +50,27 @@ const App = () => {
     console.log('Remove task: ', task);
   }
 
-  const [startedTasks, setStartedTasks] = useState([]);
 
+  const handleStartTask = (taskToStart) => {
+    const updatedTasks = tasks.map(task => {
+        if (task.taskId === taskToStart.taskId) {
+            return { ...task, taskStatus: 'Ongoing' }; // Update taskStatus of the task to 'Ongoing'
+        }
+        return task;
+    });
+    setTasks(updatedTasks); // Update tasks state with updatedTasks
+    console.log('Started task: ', taskToStart);
+  }
 
-  const handleStartTask = (task) => {
-    task.taskStatus = 'Ongoing';
-    setStartedTasks(prevStartedTasks => [...prevStartedTasks, task]);
-    console.log('Started tasks: ', startedTasks);
+  const handleStopTask = (taskToStop) => {
+    const updatedTasks = tasks.map(task => {
+        if (task.taskId === taskToStop.taskId) {
+            return { ...task, taskStatus: 'NotOngoing' }; // Update taskStatus of the task to 'NotOngoing'
+        }
+        return task;
+    });
+    setTasks(updatedTasks); // Update tasks state with updatedTasks
+    console.log('Stopped task: ', taskToStop);
   }
 
 
@@ -72,7 +86,7 @@ const App = () => {
             <AddTask tasks={tasks} onAddTask={handleAddTask} onStartTask={handleStartTask} onRemoveTask={handleRemoveTask}/>
         </View>
         <View className="basis-1/2 items-end z-10">
-          <OngoingTasks tasks={tasks}/>
+          <OngoingTasks tasks={tasks} stopTask={handleStopTask}/>
         </View>
       </View>
       <History />
