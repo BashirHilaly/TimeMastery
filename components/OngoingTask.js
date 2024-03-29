@@ -9,6 +9,30 @@ const TIMER_STORAGE_KEY = '@timer:start_time'; // AsyncStorage key to store time
 
 const OngoingTask = ({ task, stopTask }) => {
 
+    const [startTime, setStartTime] = useState(null);
+    const [elapsedTime, setElapsedTime] = useState(0);
+
+    useEffect(() => {
+      let interval;
+      if (startTime !== null) {
+        interval = setInterval(() => {
+          const currentTime = Date.now();
+          const elapsed = currentTime - startTime;
+          setElapsedTime(elapsed);
+        }, 1000); // Update every second
+      }
+  
+      return () => clearInterval(interval);
+    }, [startTime]);
+
+    const startTimer = () => {
+      setStartTime(Date.now());
+    }
+    const stopTimer = () => {
+      console.log('Timer lasted for:', elapsedTime, ' before it was stopped');
+      setStartTime(null);
+    }
+
     const [pickedUp, setPickedUp] = useState(false);
   
     const pickUpTask = () => {
@@ -66,8 +90,9 @@ const OngoingTask = ({ task, stopTask }) => {
             if (pan.x._value < -135){
               //Stop timer for task and update its values
               //console.log('should work');
+              stopTimer();
               stopTask(task);
-              console.log('Stop Timer');
+              //console.log('Stop Timer');
             }
             else {
               Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start();
@@ -78,10 +103,17 @@ const OngoingTask = ({ task, stopTask }) => {
     ).current;
 
 
-
-    if (task.taskStatus == 'Ongoing'){
+    if (task.taskStatus == 'Ongoing' && startTime == null){
       console.log('Start Timer');
+      startTimer();
     }
+
+    const formatTime = (milliseconds) => {
+      const seconds = Math.floor(milliseconds / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    };
 
     return (
       <View>
@@ -96,7 +128,7 @@ const OngoingTask = ({ task, stopTask }) => {
                 <FontAwesome name="circle" size={16} color={task.taskColor} />
             </View>
             <View className='basis-1/3 items-center '>
-              <Text className="text-xs font-normal text-[#BEBEBE]">00:00</Text>
+              <Text className="text-xs font-normal text-[#BEBEBE]">{formatTime(elapsedTime)}</Text>
             </View>
             <View className="basis-1/3 items-end">
                 <Text className="font-semibold text-[#BEBEBE]">{ task.taskName }</Text>
