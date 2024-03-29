@@ -10,7 +10,8 @@ const TIMER_STORAGE_KEY = '@timer:start_time'; // AsyncStorage key to store time
 const OngoingTask = ({ task, stopTask }) => {
 
     const [startTime, setStartTime] = useState(null);
-    const [elapsedTime, setElapsedTime] = useState(0);
+    const [elapsedTime, setElapsedTime] = useState(0); // This variable is for rendering time in view
+    const elapsedTimeRef = useRef(0);
 
     useEffect(() => {
       let interval;
@@ -18,6 +19,7 @@ const OngoingTask = ({ task, stopTask }) => {
         interval = setInterval(() => {
           const currentTime = Date.now();
           const elapsed = currentTime - startTime;
+          elapsedTimeRef.current = elapsed;
           setElapsedTime(elapsed);
         }, 1000); // Update every second
       }
@@ -29,7 +31,7 @@ const OngoingTask = ({ task, stopTask }) => {
       setStartTime(Date.now());
     }
     const stopTimer = () => {
-      console.log('Timer lasted for:', elapsedTime, ' before it was stopped');
+      console.log('Timer lasted for:', elapsedTimeRef.current, ' milliseconds before it was stopped');
       setStartTime(null);
     }
 
