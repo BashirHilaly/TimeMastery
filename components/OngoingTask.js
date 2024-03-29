@@ -7,7 +7,7 @@ import { FontAwesome } from '@expo/vector-icons';
 const TIMER_INTERVAL = 1000; // 1 second
 const TIMER_STORAGE_KEY = '@timer:start_time'; // AsyncStorage key to store timer start time
 
-const dayDataObject = { date: '3/14/2006', totalElapsedTime: 3 };
+const dataEntryObject = { date: '3/14/2006', totalElapsedTime: 3 };
 
 const OngoingTask = ({ task, stopTask }) => {
 
