@@ -7,11 +7,14 @@ import { FontAwesome } from '@expo/vector-icons';
 const TIMER_INTERVAL = 1000; // 1 second
 const TIMER_STORAGE_KEY = '@timer:start_time'; // AsyncStorage key to store timer start time
 
+const dayDataObject = { date: '3/14/2006', totalElapsedTime: 3 };
+
 const OngoingTask = ({ task, stopTask }) => {
 
     const [startTime, setStartTime] = useState(null);
     const [elapsedTime, setElapsedTime] = useState(0); // This variable is for rendering time in view
     const elapsedTimeRef = useRef(0);
+    const startDate = useRef();
 
     useEffect(() => {
       let interval;
@@ -27,10 +30,20 @@ const OngoingTask = ({ task, stopTask }) => {
       return () => clearInterval(interval);
     }, [startTime]);
 
+    const formatTime = (milliseconds) => {
+      const seconds = Math.floor(milliseconds / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    };
+
     const startTimer = () => {
+      const currentDate = new Date();
       setStartTime(Date.now());
+      startDate.current = currentDate;
     }
     const stopTimer = () => {
+      console.log('Timer started on:', startDate); // Log the start date
       console.log('Timer lasted for:', elapsedTimeRef.current, ' milliseconds before it was stopped');
       setStartTime(null);
     }
@@ -110,12 +123,6 @@ const OngoingTask = ({ task, stopTask }) => {
       startTimer();
     }
 
-    const formatTime = (milliseconds) => {
-      const seconds = Math.floor(milliseconds / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-    };
 
     return (
       <View>

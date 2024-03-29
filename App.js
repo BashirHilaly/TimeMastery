@@ -59,7 +59,7 @@ const App = () => {
         return task;
     });
     setTasks(updatedTasks); // Update tasks state with updatedTasks
-    console.log('Started task: ', taskToStart);
+    //console.log('Started task: ', taskToStart);
   }
 
   const handleStopTask = (taskToStop) => {
@@ -70,7 +70,7 @@ const App = () => {
         return task;
     });
     setTasks(updatedTasks); // Update tasks state with updatedTasks
-    console.log('Stopped task: ', taskToStop);
+    //console.log('Stopped task: ', taskToStop);
   }
 
 
