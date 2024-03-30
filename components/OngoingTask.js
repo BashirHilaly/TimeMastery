@@ -43,9 +43,12 @@ const OngoingTask = ({ task, stopTask }) => {
       startDate.current = currentDate;
     }
     const stopTimer = () => {
-      console.log('Timer started on:', startDate); // Log the start date
-      console.log('Timer lasted for:', elapsedTimeRef.current, ' milliseconds before it was stopped');
+
+      //console.log('Timer started on:', startDate); // Log the start date
+      //console.log('Timer lasted for:', elapsedTimeRef.current, ' milliseconds before it was stopped');
       setStartTime(null);
+      console.log('Stopped Task: ', task);
+      stopTask(task);
     }
 
     const [pickedUp, setPickedUp] = useState(false);
@@ -106,7 +109,6 @@ const OngoingTask = ({ task, stopTask }) => {
               //Stop timer for task and update its values
               //console.log('should work');
               stopTimer();
-              stopTask(task);
               //console.log('Stop Timer');
             }
             else {

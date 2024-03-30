@@ -9,6 +9,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { NativeWindStyleSheet } from "nativewind";
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -36,40 +38,62 @@ const App = () => {
   const [tasks, setTasks] = useState(taskData);
 
   useEffect(() => {
+    AsyncStorage.setItem('tasks', JSON.stringify(tasks))
+      .catch(error => {
+        console.error('Error saving data: ', error);
+      });
     console.log('Tasks: ', tasks);
   }, [tasks]);
 
   const handleAddTask = (newTask) => {
-    previousMaxID = tasks[tasks.length - 1].taskId;
-    newTask.taskId = previousMaxID + 1;
-    setTasks([...tasks, newTask]);
-    console.log('New task: ', newTask);
-  }
-  const handleRemoveTask = (task) => {
-    setTasks(currentTasks => currentTasks.filter(task => task.taskId !== task.taskId));
-    console.log('Remove task: ', task);
-  }
-
-
-  const handleStartTask = (taskToStart) => {
-    const updatedTasks = tasks.map(task => {
-        if (task.taskId === taskToStart.taskId) {
-            return { ...task, taskStatus: 'Ongoing' }; // Update taskStatus of the task to 'Ongoing'
-        }
-        return task;
+    setTasks(prevTasks => {
+      const previousMaxID = prevTasks.length > 0 ? prevTasks[prevTasks.length - 1].taskId : -1;
+      newTask.taskId = previousMaxID + 1;
+      console.log('New task: ', newTask);
+      return [...prevTasks, newTask];
     });
-    setTasks(updatedTasks); // Update tasks state with updatedTasks
+  };
+  const handleRemoveTask = (task) => {
+    setTasks(currentTasks => {
+      const updatedTasks = currentTasks.filter(t => t.taskId !== task.taskId);
+      console.log('Remove task: ', task);
+      return updatedTasks;
+    });
+  };
+  
+
+  // FIX tasks not being the most current tasks
+  const handleStartTask = (taskToStart) => {
+    console.log('Begining of start task: ', tasks);
+    const taskIndex = tasks.findIndex(task => task.taskId === taskToStart.taskId);
+
+    if (taskIndex !== -1){
+      const updatedTasks = [...tasks];
+
+      updatedTasks[taskIndex] = {
+        ...updatedTasks[taskIndex],
+        taskStatus: 'Ongoing'
+      };
+
+      console.log('Updated tasks: ', updatedTasks);
+      setTasks(updatedTasks);
+    }
     //console.log('Started task: ', taskToStart);
   }
 
   const handleStopTask = (taskToStop) => {
-    const updatedTasks = tasks.map(task => {
-        if (task.taskId === taskToStop.taskId) {
-            return { ...task, taskStatus: 'NotOngoing' }; // Update taskStatus of the task to 'NotOngoing'
-        }
-        return task;
-    });
-    setTasks(updatedTasks); // Update tasks state with updatedTasks
+    const taskIndex = tasks.findIndex(task => task.taskId === taskToStop.taskId);
+
+    if (taskIndex !== -1){
+      const updatedTasks = [...tasks];
+
+      updatedTasks[taskIndex] = {
+        ...updatedTasks[taskIndex],
+        taskStatus: 'NotOngoing'
+      };
+
+      setTasks(updatedTasks);
+    }
     //console.log('Stopped task: ', taskToStop);
   }
 

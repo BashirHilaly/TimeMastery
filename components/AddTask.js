@@ -4,6 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import tailwind from 'nativewind';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 import Task from './Task';
@@ -25,6 +27,7 @@ const AddTask = ({ tasks, onAddTask, onStartTask, onRemoveTask }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [formData, setFormData] = useState({});
     const [selectedColor, setSelectedColor] = useState(null);
+
     
     useEffect(() => {
         console.log('Selected Color: ', selectedColor);
@@ -39,7 +42,7 @@ const AddTask = ({ tasks, onAddTask, onStartTask, onRemoveTask }) => {
         // Create new item with an incremented id
         const newTask = { 
             taskId: null, taskName: value, taskColor: selectedColor, taskStatus: 'NotOngoing',
-            dayData: [
+            dataEntry: [
                 { date: null,
                 totalElapsedTime: 0 }
                 ],
