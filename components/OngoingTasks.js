@@ -9,7 +9,6 @@ import OngoingTask from './OngoingTask';
 
 const OngoingTasks = ({ tasks, stopTask }) => {
      
-
     return (
         <LinearGradient className="bg-slate-500 h-64 w-11/12 p-2 rounded-3xl" colors={['#27252F', '#3C3258', '#5A478E']} style={{ flex: 1 }}>
             <View className="mx-auto pt-2">

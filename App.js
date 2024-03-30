@@ -10,6 +10,8 @@ import { NativeWindStyleSheet } from "nativewind";
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import TaskDataService from './TaskDataService'; // Path to your TaskDataService file
+
 
 
 NativeWindStyleSheet.setOutput({
@@ -24,41 +26,47 @@ NativeWindStyleSheet.setOutput({
 
 //const initialtasks = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
-const taskData = [{ 
-  taskId: 0, taskName: "Task 1", taskColor: "#CFAADF", taskStatus: 'NotOngoing',
+const taskData = [
+  { taskId: 0, taskName: "Task 1", taskColor: "#CFAADF", taskStatus: 'NotOngoing',
   dayData: [
     { date: '3/14/2006',
       totalElapsedTime: 3 }
     ],
-  totalTime: 10
-}]
+  totalTime: 10 },
+  { taskId: 1, taskName: "Task 2", taskColor: "#FEDA98", taskStatus: 'NotOngoing',
+    dayData: [
+      { date: '3/14/2006',
+        totalElapsedTime: 3 }
+      ],
+    totalTime: 10
+  }]
 
 const App = () => {
 
-  const [tasks, setTasks] = useState(taskData);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    AsyncStorage.setItem('tasks', JSON.stringify(tasks))
-      .catch(error => {
-        console.error('Error saving data: ', error);
-      });
-    console.log('Tasks: ', tasks);
-  }, [tasks]);
+    async function fetchTaskData() {
+      const data = await TaskDataService.getTaskData();
+      setTasks(data);
+    }
+    fetchTaskData();
+  }, []);
+
+  const updateTaskData = async (newTaskData) => {
+    await TaskDataService.saveTaskData(newTaskData);
+    setTasks(newTaskData);
+  };
+
 
   const handleAddTask = (newTask) => {
-    setTasks(prevTasks => {
-      const previousMaxID = prevTasks.length > 0 ? prevTasks[prevTasks.length - 1].taskId : -1;
-      newTask.taskId = previousMaxID + 1;
-      console.log('New task: ', newTask);
-      return [...prevTasks, newTask];
-    });
+    const updatedTaskData = [...taskData, newTask];
+    updateTaskData(updatedTaskData);
   };
   const handleRemoveTask = (task) => {
-    setTasks(currentTasks => {
-      const updatedTasks = currentTasks.filter(t => t.taskId !== task.taskId);
-      console.log('Remove task: ', task);
-      return updatedTasks;
-    });
+    const taskId = task.taskId;
+    const updatedTaskData = tasks.filter(t => t.taskId !== taskId);
+    updateTaskData(updatedTaskData);
   };
   
 
