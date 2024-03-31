@@ -87,11 +87,11 @@ const Task = ({ task, onStartTask, onRemoveTask }) => {
                   opacity: fadeAnim
               }}
               {...panResponder.panHandlers}
-              className="flex flex-row mb-4">
-              <View className="basis-1/2 items-start">
+              className="flex flex-row mb-4 justify-between">
+              <View className="items-start">
                   <FontAwesome name="circle" size={16} color={task.taskColor} />
               </View>
-              <View className="basis-1/2 items-end">
+              <View className="items-end">
                   <Text className="font-semibold text-[#BEBEBE]">{ task.taskName }</Text>
               </View>
           </Animated.View>

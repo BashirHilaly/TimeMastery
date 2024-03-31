@@ -28,11 +28,11 @@ const Summary = ({ tasks }) => {
                 </View>
                 <View className="basis-1/2">
                     {summaryTasks.map(item => (
-                        <View className="flex flex-row mb-2" key={item.taskName}>
-                            <View className="basis-1/2 justify-center items-center">
+                        <View className="flex flex-row mb-2 justify-between" key={item.taskName}>
+                            <View className="mt-1">
                                 <FontAwesome name="circle" size={18} color={item.taskColor} />
                             </View>
-                            <View className="basis-1/2">
+                            <View className="items-end">
                                 <Text className="text-[#BEBEBE] font-semibold text-xl">{item.taskName}</Text>
                             </View>
                         </View>

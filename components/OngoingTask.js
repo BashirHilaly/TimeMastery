@@ -40,7 +40,7 @@ const OngoingTask = ({ task, stopTask }) => {
     const startTimer = () => {
       const currentDate = new Date();
       setStartTime(Date.now());
-      startDate.current = currentDate;
+      startDate.current = currentDate.toLocaleDateString();
     }
     const stopTimer = () => {
 
@@ -48,6 +48,19 @@ const OngoingTask = ({ task, stopTask }) => {
       //console.log('Timer lasted for:', elapsedTimeRef.current, ' milliseconds before it was stopped');
       setStartTime(null);
       console.log('Stopped Task: ', task);
+      // Updated the tasks values
+      var dateExists = false;
+      task.dayData.forEach(day => {
+        if (day.date === startDate) {
+          day.totalElapsedTime += elapsedTimeRef.current;
+          dateExists = true;
+        }
+      })
+      if (!dateExists){
+        task.dayData.push({ date: startDate.current, totalElapsedTime: elapsedTimeRef.current });
+      }
+
+      task.totalTime += elapsedTimeRef.current;
       stopTask(task);
     }
 
@@ -134,14 +147,14 @@ const OngoingTask = ({ task, stopTask }) => {
                 opacity: fadeAnim
             }}
             {...panResponder.panHandlers}
-            className="flex flex-row mb-4">
-            <View className="basis-1/3 items-start">
+            className="flex flex-row mb-4 justify-between">
+            <View className="items-start">
                 <FontAwesome name="circle" size={16} color={task.taskColor} />
             </View>
-            <View className='basis-1/3 items-center '>
+            <View className='items-center'>
               <Text className="text-xs font-normal text-[#BEBEBE]">{formatTime(elapsedTime)}</Text>
             </View>
-            <View className="basis-1/3 items-end">
+            <View className="items-end">
                 <Text className="font-semibold text-[#BEBEBE]">{ task.taskName }</Text>
             </View>
         </Animated.View>

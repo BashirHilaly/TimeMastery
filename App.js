@@ -18,12 +18,8 @@ NativeWindStyleSheet.setOutput({
 });
 
 
-// For dragging https://www.youtube.com/watch?v=tsM3N_7bNcE 
-
 // Storage solution: https://react-native-async-storage.github.io/async-storage/
 
-
-//const initialtasks = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
 var taskData = [
   { taskId: 0, taskName: "Task 1", taskColor: "#CFAADF", taskStatus: 'NotOngoing',
@@ -58,21 +54,21 @@ const App = () => {
   const handleAddTask = (newTask) => {
     var prevID = -1
     if (tasks.length > 0){
-      prevID = tasks[tasks.length - 1].taskId;
+      prevID = taskData[taskData.length - 1].taskId;
     }
     newTask.taskId = prevID + 1
-    const updatedTaskData = [...tasks, newTask];
+    const updatedTaskData = [...taskData, newTask];
     setTasks(updatedTaskData);
   };
   const handleRemoveTask = (task) => {
     const taskId = task.taskId;
-    const updatedTaskData = tasks.filter(t => t.taskId !== taskId);
+    const updatedTaskData = taskData.filter(t => t.taskId !== taskId);
     setTasks(updatedTaskData);
     console.log("Removed task: ", task);
   };
   
 
-  // FIX tasks not being the most current tasks
+  // Fixed tasks coming back from the dead using the taskData var
   const handleStartTask = (taskToStart) => {
     //console.log('Begining of start task: ', tasks);
     const taskIndex = taskData.findIndex(task => task.taskId === taskToStart.taskId);
