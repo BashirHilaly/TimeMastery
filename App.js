@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, FlatList, SafeAreaView } from 'react-native';
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, useContext } from 'react';
 import Summary from './components/Summary';
 import History from './components/History';
 import AddTask from './components/AddTask';
@@ -10,7 +10,6 @@ import { NativeWindStyleSheet } from "nativewind";
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TaskDataService from './TaskDataService'; // Path to your TaskDataService file
 
 
 
@@ -26,7 +25,7 @@ NativeWindStyleSheet.setOutput({
 
 //const initialtasks = [{ taskName: "Task 1", taskColor: "#CFAADF", taskTotalTime: 2, taskCurrentTime: 0}, { taskName: "Task 2", taskColor: "#FEDA98", taskTotalTime: 2, taskCurrentTime: 0}]
 
-const taskData = [
+var taskData = [
   { taskId: 0, taskName: "Task 1", taskColor: "#CFAADF", taskStatus: 'NotOngoing',
   dayData: [
     { date: '3/14/2006',
@@ -38,62 +37,65 @@ const taskData = [
       { date: '3/14/2006',
         totalElapsedTime: 3 }
       ],
-    totalTime: 10
-  }]
+    totalTime: 10 },
+  { taskId: 2, taskName: "Task 3", taskColor: "#89FC00", taskStatus: 'NotOngoing',
+  dayData: [
+    { date: '3/14/2006',
+      totalElapsedTime: 3 }
+    ],
+  totalTime: 10 }]
 
 const App = () => {
 
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(taskData);
+
 
   useEffect(() => {
-    async function fetchTaskData() {
-      const data = await TaskDataService.getTaskData();
-      setTasks(data);
-    }
-    fetchTaskData();
-  }, []);
-
-  const updateTaskData = async (newTaskData) => {
-    await TaskDataService.saveTaskData(newTaskData);
-    setTasks(newTaskData);
-  };
-
+    taskData = tasks;
+    console.log('tasks: ', taskData);
+  }, [tasks]);
 
   const handleAddTask = (newTask) => {
-    const updatedTaskData = [...taskData, newTask];
-    updateTaskData(updatedTaskData);
+    var prevID = -1
+    if (tasks.length > 0){
+      prevID = tasks[tasks.length - 1].taskId;
+    }
+    newTask.taskId = prevID + 1
+    const updatedTaskData = [...tasks, newTask];
+    setTasks(updatedTaskData);
   };
   const handleRemoveTask = (task) => {
     const taskId = task.taskId;
     const updatedTaskData = tasks.filter(t => t.taskId !== taskId);
-    updateTaskData(updatedTaskData);
+    setTasks(updatedTaskData);
+    console.log("Removed task: ", task);
   };
   
 
   // FIX tasks not being the most current tasks
   const handleStartTask = (taskToStart) => {
-    console.log('Begining of start task: ', tasks);
-    const taskIndex = tasks.findIndex(task => task.taskId === taskToStart.taskId);
+    //console.log('Begining of start task: ', tasks);
+    const taskIndex = taskData.findIndex(task => task.taskId === taskToStart.taskId);
 
     if (taskIndex !== -1){
-      const updatedTasks = [...tasks];
+      const updatedTasks = [...taskData];
 
       updatedTasks[taskIndex] = {
         ...updatedTasks[taskIndex],
         taskStatus: 'Ongoing'
       };
 
-      console.log('Updated tasks: ', updatedTasks);
+      //console.log('Updated tasks: ', updatedTasks);
       setTasks(updatedTasks);
     }
     //console.log('Started task: ', taskToStart);
   }
 
   const handleStopTask = (taskToStop) => {
-    const taskIndex = tasks.findIndex(task => task.taskId === taskToStop.taskId);
+    const taskIndex = taskData.findIndex(task => task.taskId === taskToStop.taskId);
 
     if (taskIndex !== -1){
-      const updatedTasks = [...tasks];
+      const updatedTasks = [...taskData];
 
       updatedTasks[taskIndex] = {
         ...updatedTasks[taskIndex],
