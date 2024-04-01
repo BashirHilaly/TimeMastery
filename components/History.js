@@ -57,13 +57,13 @@ const History = ({ tasks }) => {
     return (
         <View className="container mt-7 w-10/12 rounded-3xl bg-[#27252F] p-4 h-60" onLayout={onLayout}>
             <View className="flex flex-row">
-                <View className="w-1/2 items-end px-2">
-                    <Text className="text-[#BEBEBE] font-normal">YEAR</Text>
-                </View>
+                <Pressable  onPress={() => {setIsYear(true); console.log(isYear);}} className="w-1/2 items-end px-2">
+                    <Text className="text-[#BEBEBE] font-normal" style={{  textDecorationLine: isYear ? 'underline' : 'none' }}>YEAR</Text>
+                </Pressable>
                 <Text className="text-[#BEBEBE]">|</Text>
-                <View className="w-1/2 items-start px-2">
-                    <Text className="text-[#BEBEBE] font-normal">WEEK</Text>
-                </View>
+                <Pressable onPress={() => {setIsYear(false); console.log(isYear);}} className="w-1/2 items-start px-2">
+                    <Text className="text-[#BEBEBE] font-normal" style={{  textDecorationLine: isYear ? 'none' : 'underline' }}>WEEK</Text>
+                </Pressable>
             </View>
 
             {isYear && <Text>isYear is true</Text>}
