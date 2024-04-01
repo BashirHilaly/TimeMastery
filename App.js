@@ -119,7 +119,7 @@ const App = () => {
           <OngoingTasks tasks={tasks} stopTask={handleStopTask}/>
         </View>
       </View>
-      <History />
+      <History tasks={tasks} />
     </View>
   );
 };
