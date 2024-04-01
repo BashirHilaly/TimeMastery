@@ -13,6 +13,42 @@ import React, {useRef, useState, useEffect } from 'react';
 
 const History = ({ tasks }) => {
 
+    const today = new Date();
+    const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var previousDays = [];
+    var prevDaysOfTheWeek = [];
+
+
+    const weekData = {
+        labels: [],
+        datasets: [
+            {
+                data: []
+            }
+        ]
+    }
+
+    // Initialize weekly data
+    useEffect(() => {
+        for (let i = 0; i < 7; i++){
+            const previousDay = new Date(today);
+            previousDay.setDate(today.getDate() - i);
+            previousDays.push(previousDay.getDay());
+        }
+        previousDays = previousDays.slice().reverse();
+
+        // Loop through previousDays, find value n, push daysOfTheWeek[n] to prevDaysOfTheWeek
+        for (let i = 0; i < previousDays.length; i++)
+        {
+            prevDaysOfTheWeek.push(daysOfTheWeek[previousDays[i]]);
+        }
+        //console.log(prevDaysOfTheWeek);
+
+        weekData.labels = prevDaysOfTheWeek;
+        console.log(weekData);
+    }, []);
+
+
     const [isYear, setIsYear] = useState(false);
 
     const commitsData = [
@@ -38,7 +74,7 @@ const History = ({ tasks }) => {
         color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
-        useShadowColorFromDataset: false, // optional
+        useShadowColorFromDataset: false // optional
         
         // barRadius = ;
     };
@@ -66,9 +102,6 @@ const History = ({ tasks }) => {
                 </Pressable>
             </View>
 
-            {isYear && <Text>isYear is true</Text>}
-            {!isYear && <Text>isYear is false</Text>}
-
             <View>
                 <Text className="text-[#BEBEBE]">Select a task to view</Text>
                 <View className="flex flex-row justify-center">
@@ -76,16 +109,34 @@ const History = ({ tasks }) => {
                 </View>
             </View>
 
-            <ContributionGraph
-                values={commitsData}
-                endDate={new Date("2017-12-31")}
-                numDays={365}
-                width={componentWidth}
-                height={componentHeight}
-                chartConfig={chartConfig}
-                gutterSize={1}
-                squareSize={15}
-            />
+            {isYear && 
+                <View>
+                    <Text className="text-[#BEBEBE]">isYear is true</Text>
+                    <ContributionGraph
+                        values={commitsData}
+                        endDate={new Date("2017-12-31")}
+                        numDays={365}
+                        width={componentWidth}
+                        height={componentHeight}
+                        chartConfig={chartConfig}
+                        gutterSize={1}
+                        squareSize={15}
+                    />
+                </View>
+            }
+            {!isYear && 
+                <View>
+                    <BarChart
+                        data={weekData}
+                        width={componentWidth}
+                        height={componentHeight}
+                        yAxisLabel="$"
+                        chartConfig={chartConfig}
+                        verticalLabelRotation={30}
+                    />
+                </View>
+            }
+
         </View>
     );
 };
