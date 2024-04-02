@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, Animated } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Animated, TouchableOpacity } from 'react-native';
 import {
     LineChart,
     BarChart,
@@ -11,45 +11,84 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, {useRef, useState, useEffect } from 'react';
 
 
+const TaskSelector = ({ tasks }) => {
+    const [selectedTask, setSelectedTask] = useState(null);
+    const scaleAnim = useState(new Animated.Value(1))[0];
+    
+
+    const handleTaskSelection = (task) => {
+        setSelectedTask(task);
+        Animated.timing(scaleAnim, {
+        toValue: 1.5,
+        duration: 300,
+        useNativeDriver: true
+        }).start();
+    };
+
+
+    return (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        {tasks.map((task, index) => (
+            <TouchableOpacity
+            key={index}
+            onPress={() => handleTaskSelection(task)}
+            style={{ alignItems: 'center', padding: 10 }}
+            >
+            <Animated.View
+                style={{
+                transform: [{ scale: selectedTask === task ? scaleAnim : 1 }]
+                }}
+            >
+                <FontAwesome name="circle" size={20} color={task.taskColor} />
+            </Animated.View>
+            </TouchableOpacity>
+        ))}
+        </View>
+    );
+};
+
+
 const History = ({ tasks }) => {
 
     const today = new Date();
-    const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
     var previousDays = [];
     var prevDaysOfTheWeek = [];
 
+    for (let i = 0; i < 7; i++){
+        const previousDay = new Date(today);
+        previousDay.setDate(today.getDate() - i);
+        previousDays.push(previousDay.getDay());
+    }
+
+    previousDays = previousDays.slice().reverse();
+
+    // Loop through previousDays, find value n, push daysOfTheWeek[n] to prevDaysOfTheWeek
+    for (let i = 0; i < previousDays.length; i++)
+    {
+        prevDaysOfTheWeek.push(daysOfTheWeek[previousDays[i]]);
+    }
+    //console.log(prevDaysOfTheWeek);
 
     const weekData = {
-        labels: [],
+        labels: prevDaysOfTheWeek,
         datasets: [
             {
-                data: []
-            }
+                data: [20, 45, 28, 80, 86, 43, 40]
+            },
         ]
     }
 
+    console.log(weekData);
+
     // Initialize weekly data
     useEffect(() => {
-        for (let i = 0; i < 7; i++){
-            const previousDay = new Date(today);
-            previousDay.setDate(today.getDate() - i);
-            previousDays.push(previousDay.getDay());
-        }
-        previousDays = previousDays.slice().reverse();
 
-        // Loop through previousDays, find value n, push daysOfTheWeek[n] to prevDaysOfTheWeek
-        for (let i = 0; i < previousDays.length; i++)
-        {
-            prevDaysOfTheWeek.push(daysOfTheWeek[previousDays[i]]);
-        }
-        //console.log(prevDaysOfTheWeek);
-
-        weekData.labels = prevDaysOfTheWeek;
-        console.log(weekData);
     }, []);
 
 
     const [isYear, setIsYear] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
 
     const commitsData = [
         { date: "2017-01-02", count: 1 },
@@ -73,10 +112,8 @@ const History = ({ tasks }) => {
         backgroundGradientToOpacity: 0,
         color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
         strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false // optional
-        
-        // barRadius = ;
+        barPercentage: .5,
+        useShadowColorFromDataset: false, // optional
     };
 
     const [componentHeight, setComponentHeight] = useState(null);
@@ -103,9 +140,8 @@ const History = ({ tasks }) => {
             </View>
 
             <View>
-                <Text className="text-[#BEBEBE]">Select a task to view</Text>
-                <View className="flex flex-row justify-center">
-
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <TaskSelector tasks={tasks} />
                 </View>
             </View>
 
@@ -125,14 +161,15 @@ const History = ({ tasks }) => {
                 </View>
             }
             {!isYear && 
-                <View>
+                <View className=" -ml-9 -mt-3">
                     <BarChart
                         data={weekData}
                         width={componentWidth}
-                        height={componentHeight}
-                        yAxisLabel="$"
+                        height={componentHeight - 30}
+                        withHorizontalLabels={false}
                         chartConfig={chartConfig}
-                        verticalLabelRotation={30}
+                        withInnerLines={false}
+                        showValuesOnTopOfBars={true}
                     />
                 </View>
             }
