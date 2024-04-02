@@ -50,7 +50,6 @@ const commitsData = [
 const History = ({ tasks }) => {
 
     const today = new Date();
-    const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
     var previousDays = [];
     var prevDaysOfTheWeek = [];
     const [isYear, setIsYear] = useState(false);
@@ -74,13 +73,6 @@ const History = ({ tasks }) => {
 
     previousDays = previousDays.slice().reverse();
 
-    // Loop through previousDays, find value n, push daysOfTheWeek[n] to prevDaysOfTheWeek
-    //for (let i = 0; i < previousDays.length; i++)
-    //{
-        //prevDaysOfTheWeek.push(daysOfTheWeek[previousDays[i]]);
-    //}
-    //prevDaysOfTheWeek[6] = 'Today';
-    //console.log(prevDaysOfTheWeek);
 
     const weekData = {
         labels: previousDays,
@@ -91,15 +83,14 @@ const History = ({ tasks }) => {
         ]
     }
 
-    // Initialize weekly data
-    useEffect(() => {
-
-    }, []);
 
     const [barChartConfig, setBarChartConfig] = useState(baseBarChartConfig);
     const [barData, setBarData] = useState(weekData);
 
-    console.log(barData);
+    // Initialize task data
+    useEffect(() => {
+
+    }, []);
 
     // On change of selectedTask
     useEffect(() => {
@@ -107,6 +98,32 @@ const History = ({ tasks }) => {
         if (selectedTask){
             const newChartConfig = {...barChartConfig, color: (opacity = 1) => selectedTask.taskColor };
             setBarChartConfig(newChartConfig);
+
+            // Update data
+            // First find the days we need to get
+            const daysWeNeed = []
+            for (let i = 0; i < 7; i++){
+                const previousDay = new Date(today);
+                previousDay.setDate(today.getDate() - i);
+                daysWeNeed.push(previousDay.toLocaleDateString());
+            }
+            // Then we loop through every date then through task data and get all objects we need for each day
+            const dayDataObjects = []
+            for (let i = 0; i < daysWeNeed.length; i++)
+            {
+                const currentDate = daysWeNeed[i];
+                for (let i = 0; i < selectedTask.dayData.length; i++)
+                {
+                    if (selectedTask.dayData[i].date == currentDate)
+                    {
+                        dayDataObjects.push(selectedTask.dayData[i]);
+                    }
+                }
+            }
+            console.log('Day data objects: ', dayDataObjects);
+            // No we loop through dayDataObjects, find all objects with the same date, add all of the totalElapsedTime up
+            console.log(barData);
+
         }
         else {
             handleTaskSelection(tasks[0]);
