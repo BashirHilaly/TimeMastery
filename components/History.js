@@ -11,6 +11,41 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, {useRef, useState, useEffect } from 'react';
 
 
+const baseContribChart = {
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: .5,
+    useShadowColorFromDataset: false, // optional
+};
+const baseBarChartConfig = {
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: .5,
+    useShadowColorFromDataset: false, // optional
+};
+
+const commitsData = [
+    { date: "2017-01-02", count: 1 },
+    { date: "2017-01-03", count: 2 },
+    { date: "2017-01-04", count: 3 },
+    { date: "2017-01-05", count: 4 },
+    { date: "2017-01-06", count: 5 },
+    { date: "2017-01-30", count: 2 },
+    { date: "2017-01-31", count: 3 },
+    { date: "2017-03-01", count: 2 },
+    { date: "2017-04-02", count: 4 },
+    { date: "2017-03-05", count: 2 },
+    { date: "2017-02-30", count: 4 },
+    { date: "2017-11-30", count: 4 }
+];
 
 const History = ({ tasks }) => {
 
@@ -34,20 +69,21 @@ const History = ({ tasks }) => {
     for (let i = 0; i < 7; i++){
         const previousDay = new Date(today);
         previousDay.setDate(today.getDate() - i);
-        previousDays.push(previousDay.getDay());
+        previousDays.push(`${previousDay.getMonth()}/${previousDay.getDate()}`);
     }
 
     previousDays = previousDays.slice().reverse();
 
     // Loop through previousDays, find value n, push daysOfTheWeek[n] to prevDaysOfTheWeek
-    for (let i = 0; i < previousDays.length; i++)
-    {
-        prevDaysOfTheWeek.push(daysOfTheWeek[previousDays[i]]);
-    }
+    //for (let i = 0; i < previousDays.length; i++)
+    //{
+        //prevDaysOfTheWeek.push(daysOfTheWeek[previousDays[i]]);
+    //}
+    //prevDaysOfTheWeek[6] = 'Today';
     //console.log(prevDaysOfTheWeek);
 
     const weekData = {
-        labels: prevDaysOfTheWeek,
+        labels: previousDays,
         datasets: [
             {
                 data: [20, 45, 28, 80, 86, 43, 40]
@@ -55,56 +91,15 @@ const History = ({ tasks }) => {
         ]
     }
 
-    console.log(weekData);
-
-        // On change of selectedTask
-    useEffect(() => {
-        console.log('Selected task: ', selectedTask);
-        
-    }, [selectedTask]);
-
     // Initialize weekly data
     useEffect(() => {
 
     }, []);
 
-
-    const commitsData = [
-        { date: "2017-01-02", count: 1 },
-        { date: "2017-01-03", count: 2 },
-        { date: "2017-01-04", count: 3 },
-        { date: "2017-01-05", count: 4 },
-        { date: "2017-01-06", count: 5 },
-        { date: "2017-01-30", count: 2 },
-        { date: "2017-01-31", count: 3 },
-        { date: "2017-03-01", count: 2 },
-        { date: "2017-04-02", count: 4 },
-        { date: "2017-03-05", count: 2 },
-        { date: "2017-02-30", count: 4 },
-        { date: "2017-11-30", count: 4 }
-      ];
-    const baseContribChart = {
-        backgroundGradientFrom: "#1E2923",
-        backgroundGradientFromOpacity: 0,
-        backgroundGradientTo: "#08130D",
-        backgroundGradientToOpacity: 0,
-        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: .5,
-        useShadowColorFromDataset: false, // optional
-    };
-    const baseBarChartConfig = {
-        backgroundGradientFrom: "#1E2923",
-        backgroundGradientFromOpacity: 0,
-        backgroundGradientTo: "#08130D",
-        backgroundGradientToOpacity: 0,
-        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: .5,
-        useShadowColorFromDataset: false, // optional
-    };
     const [barChartConfig, setBarChartConfig] = useState(baseBarChartConfig);
+    const [barData, setBarData] = useState(weekData);
 
+    console.log(barData);
 
     // On change of selectedTask
     useEffect(() => {
