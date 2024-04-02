@@ -11,11 +11,17 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, {useRef, useState, useEffect } from 'react';
 
 
-const TaskSelector = ({ tasks }) => {
+
+const History = ({ tasks }) => {
+
+    const today = new Date();
+    const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+    var previousDays = [];
+    var prevDaysOfTheWeek = [];
+    const [isYear, setIsYear] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const scaleAnim = useState(new Animated.Value(1))[0];
     
-
     const handleTaskSelection = (task) => {
         setSelectedTask(task);
         Animated.timing(scaleAnim, {
@@ -24,36 +30,6 @@ const TaskSelector = ({ tasks }) => {
         useNativeDriver: true
         }).start();
     };
-
-
-    return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        {tasks.map((task, index) => (
-            <TouchableOpacity
-            key={index}
-            onPress={() => handleTaskSelection(task)}
-            style={{ alignItems: 'center', padding: 10 }}
-            >
-            <Animated.View
-                style={{
-                transform: [{ scale: selectedTask === task ? scaleAnim : 1 }]
-                }}
-            >
-                <FontAwesome name="circle" size={20} color={task.taskColor} />
-            </Animated.View>
-            </TouchableOpacity>
-        ))}
-        </View>
-    );
-};
-
-
-const History = ({ tasks }) => {
-
-    const today = new Date();
-    const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
-    var previousDays = [];
-    var prevDaysOfTheWeek = [];
 
     for (let i = 0; i < 7; i++){
         const previousDay = new Date(today);
@@ -81,14 +57,17 @@ const History = ({ tasks }) => {
 
     console.log(weekData);
 
+        // On change of selectedTask
+    useEffect(() => {
+        console.log('Selected task: ', selectedTask);
+        
+    }, [selectedTask]);
+
     // Initialize weekly data
     useEffect(() => {
 
     }, []);
 
-
-    const [isYear, setIsYear] = useState(false);
-    const [selectedTask, setSelectedTask] = useState(null);
 
     const commitsData = [
         { date: "2017-01-02", count: 1 },
@@ -104,8 +83,7 @@ const History = ({ tasks }) => {
         { date: "2017-02-30", count: 4 },
         { date: "2017-11-30", count: 4 }
       ];
-
-    const chartConfig = {
+    const baseContribChart = {
         backgroundGradientFrom: "#1E2923",
         backgroundGradientFromOpacity: 0,
         backgroundGradientTo: "#08130D",
@@ -115,6 +93,31 @@ const History = ({ tasks }) => {
         barPercentage: .5,
         useShadowColorFromDataset: false, // optional
     };
+    const baseBarChartConfig = {
+        backgroundGradientFrom: "#1E2923",
+        backgroundGradientFromOpacity: 0,
+        backgroundGradientTo: "#08130D",
+        backgroundGradientToOpacity: 0,
+        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: .5,
+        useShadowColorFromDataset: false, // optional
+    };
+    const [barChartConfig, setBarChartConfig] = useState(baseBarChartConfig);
+
+
+    // On change of selectedTask
+    useEffect(() => {
+        console.log('Selected task: ', selectedTask);
+        if (selectedTask){
+            const newChartConfig = {...barChartConfig, color: (opacity = 1) => selectedTask.taskColor };
+            setBarChartConfig(newChartConfig);
+        }
+        else {
+            handleTaskSelection(tasks[0]);
+        }
+        
+    }, [selectedTask]);
 
     const [componentHeight, setComponentHeight] = useState(null);
     const [componentWidth, setComponentWidth] = useState(null);
@@ -140,8 +143,24 @@ const History = ({ tasks }) => {
             </View>
 
             <View>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <TaskSelector tasks={tasks} />
+                <View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                        {tasks.map((task, index) => (
+                            <TouchableOpacity
+                            key={index}
+                            onPress={() => handleTaskSelection(task)}
+                            style={{ alignItems: 'center', padding: 10 }}
+                            >
+                            <Animated.View
+                                style={{
+                                transform: [{ scale: selectedTask === task ? scaleAnim : 1 }]
+                                }}
+                            >
+                                <FontAwesome name="circle" size={20} color={task.taskColor} />
+                            </Animated.View>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
                 </View>
             </View>
 
@@ -154,10 +173,10 @@ const History = ({ tasks }) => {
                         numDays={365}
                         width={componentWidth}
                         height={componentHeight}
-                        chartConfig={chartConfig}
+                        chartConfig={baseContribChart}
                         gutterSize={1}
                         squareSize={15}
-                    />
+                    />       
                 </View>
             }
             {!isYear && 
@@ -167,7 +186,7 @@ const History = ({ tasks }) => {
                         width={componentWidth}
                         height={componentHeight - 30}
                         withHorizontalLabels={false}
-                        chartConfig={chartConfig}
+                        chartConfig={barChartConfig}
                         withInnerLines={false}
                         showValuesOnTopOfBars={true}
                     />
