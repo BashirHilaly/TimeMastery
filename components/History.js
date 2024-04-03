@@ -50,8 +50,10 @@ const commitsData = [
 const History = ({ tasks }) => {
 
     const today = new Date();
+    // This is what will be displayed
     var previousDays = [];
-    var prevDaysOfTheWeek = [];
+    // This is what will be used to get like dates
+    var prevDaysFull = [];
     const [isYear, setIsYear] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const scaleAnim = useState(new Animated.Value(1))[0];
@@ -68,17 +70,18 @@ const History = ({ tasks }) => {
     for (let i = 0; i < 7; i++){
         const previousDay = new Date(today);
         previousDay.setDate(today.getDate() - i);
+        prevDaysFull.push(previousDay.toLocaleDateString());
         previousDays.push(`${previousDay.getMonth()}/${previousDay.getDate()}`);
     }
 
     previousDays = previousDays.slice().reverse();
-
+    prevDaysFull = prevDaysFull.slice().reverse();
 
     const weekData = {
         labels: previousDays,
         datasets: [
             {
-                data: [20, 45, 28, 80, 86, 43, 40]
+                data: [0, 0, 0, 0, 0, 0, 0]
             },
         ]
     }
@@ -112,16 +115,32 @@ const History = ({ tasks }) => {
             for (let i = 0; i < daysWeNeed.length; i++)
             {
                 const currentDate = daysWeNeed[i];
-                for (let i = 0; i < selectedTask.dayData.length; i++)
+                for (let j = 0; j < selectedTask.dayData.length; j++)
                 {
-                    if (selectedTask.dayData[i].date == currentDate)
+                    if (selectedTask.dayData[j].date == currentDate)
                     {
-                        dayDataObjects.push(selectedTask.dayData[i]);
+                        dayDataObjects.push(selectedTask.dayData[j]);
                     }
                 }
             }
             console.log('Day data objects: ', dayDataObjects);
             // No we loop through dayDataObjects, find all objects with the same date, add all of the totalElapsedTime up
+            // Now we loop through prevDaysFull and get similar dayDataObjects then add their elapsed time
+
+            for (let i = 0; i < prevDaysFull.length; i++)
+            {
+                for (let j = 0; j < dayDataObjects.length; j++)
+                {
+                    console.log(dayDataObjects[j]);
+                    if (dayDataObjects[j].date == prevDaysFull[i])
+                    {
+                        console.log('Similar dates');
+                        const newBarData = { ...barData};
+                        newBarData.datasets[0].data[i] += dayDataObjects[j].totalElapsedTime/10000;
+                        setBarData(newBarData);
+                    }
+                }
+            }
             console.log(barData);
 
         }
