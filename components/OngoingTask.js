@@ -50,14 +50,22 @@ const OngoingTask = ({ task, stopTask }) => {
       console.log('Stopped Task: ', task);
       // Updated the tasks values
       var dateExists = false;
-      task.dayData.forEach(day => {
-        if (day.date === startDate) {
-          day.totalElapsedTime += elapsedTimeRef.current;
-          dateExists = true;
-        }
-      })
-      if (!dateExists){
+      // Check if they have any dayData if not create an object
+      if (task.dayData.length < 1)
+      {
         task.dayData.push({ date: startDate.current, totalElapsedTime: elapsedTimeRef.current });
+      }
+      else
+      {
+        task.dayData.forEach(day => {
+          if (day.date === startDate) {
+            day.totalElapsedTime += elapsedTimeRef.current;
+            dateExists = true;
+          }
+        })
+        if (!dateExists){
+          task.dayData.push({ date: startDate.current, totalElapsedTime: elapsedTimeRef.current });
+        }
       }
 
       task.totalTime += elapsedTimeRef.current;

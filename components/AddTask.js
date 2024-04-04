@@ -42,10 +42,7 @@ const AddTask = ({ tasks, onAddTask, onStartTask, onRemoveTask }) => {
         // Create new item with an incremented id
         const newTask = { 
             taskId: null, taskName: value, taskColor: selectedColor, taskStatus: 'NotOngoing',
-            dataEntry: [
-                { date: null,
-                totalElapsedTime: 0 }
-                ],
+            dayData: [],
             totalTime: 0
         }
         
