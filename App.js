@@ -44,11 +44,40 @@ var taskData = [
 const App = () => {
 
   const [tasks, setTasks] = useState(taskData);
+  
+  const saveTaskData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+      console.log('Saved tasks: ', value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const updateTasks = (newTasks) => {
+    setTasks(newTasks); // Update the state
+    saveTaskData('taskData', newTasks); // Save to local storage
+  };  
+
+  const loadTasksFromStorage = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem('taskData');
+      if (storedData) {
+        console.log('Loaded Tasks: ', JSON.parse(storedData));
+        setTasks(JSON.parse(storedData));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadTasksFromStorage();
+  }, []);
 
   useEffect(() => {
     taskData = tasks;
-    console.log('tasks: ', taskData);
+    //console.log('tasks: ', taskData);
   }, [tasks]);
 
   const handleAddTask = (newTask) => {
@@ -58,12 +87,12 @@ const App = () => {
     }
     newTask.taskId = prevID + 1
     const updatedTaskData = [...taskData, newTask];
-    setTasks(updatedTaskData);
+    updateTasks(updatedTaskData);
   };
   const handleRemoveTask = (task) => {
     const taskId = task.taskId;
     const updatedTaskData = taskData.filter(t => t.taskId !== taskId);
-    setTasks(updatedTaskData);
+    updateTasks(updatedTaskData);
     console.log("Removed task: ", task);
   };
   
@@ -82,7 +111,7 @@ const App = () => {
       };
 
       //console.log('Updated tasks: ', updatedTasks);
-      setTasks(updatedTasks);
+      updateTasks(updatedTasks);
     }
     //console.log('Started task: ', taskToStart);
   }
@@ -98,7 +127,7 @@ const App = () => {
         taskStatus: 'NotOngoing'
       };
 
-      setTasks(updatedTasks);
+      updateTasks(updatedTasks);
     }
     //console.log('Stopped task: ', taskToStop);
   }
