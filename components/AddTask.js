@@ -145,7 +145,8 @@ const AddTask = ({ tasks, onAddTask, onStartTask, onRemoveTask }) => {
                         <View className="bg-[#141319] p-10 rounded-2xl w-4/5">
                             <TextInput 
                             className="bg-slate-200 border border-slate-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                            placeholder="Task Name" 
+                            placeholder="Task Name"
+                            maxLength={12}
                             onChangeText={text => handleInputChange('taskName', text)} />
                             <View className="flex flex-row mx-auto mt-3">
                                 {possibleColors.map(color => (
