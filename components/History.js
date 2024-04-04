@@ -136,7 +136,8 @@ const History = ({ tasks }) => {
                     {
                         console.log('Similar dates');
                         const newBarData = { ...barData};
-                        newBarData.datasets[0].data[i] += dayDataObjects[j].totalElapsedTime/10000;
+                        // Converting milliseconds to hours
+                        newBarData.datasets[0].data[i] += dayDataObjects[j].totalElapsedTime/(3600000);
                         setBarData(newBarData);
                     }
                 }
@@ -197,23 +198,13 @@ const History = ({ tasks }) => {
 
             {isYear && 
                 <View>
-                    <Text className="text-[#BEBEBE]">isYear is true</Text>
-                    <ContributionGraph
-                        values={commitsData}
-                        endDate={new Date("2017-12-31")}
-                        numDays={365}
-                        width={componentWidth}
-                        height={componentHeight}
-                        chartConfig={baseContribChart}
-                        gutterSize={1}
-                        squareSize={15}
-                    />       
+                    <Text className="text-[#BEBEBE] justify-center items-center text-center">Coming Soon!</Text>  
                 </View>
             }
             {!isYear && 
                 <View className=" -ml-9 -mt-3">
                     <BarChart
-                        data={weekData}
+                        data={barData}
                         width={componentWidth}
                         height={componentHeight - 30}
                         withHorizontalLabels={false}
